@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.env
+*.tsbuildinfo
+.DS_Store
+
+# Anchor build artifacts
+packages/settlement/anchor-program/target/
+packages/settlement/anchor-program/.anchor/

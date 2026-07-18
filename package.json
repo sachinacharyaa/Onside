@@ -1,0 +1,25 @@
+{
+  "name": "onside-settling-agent",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Onside — autonomous, rule-based settling agent for live World Cup markets",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "demo:headless": "npm run demo --workspace=@onside/agent-runtime",
+    "dev": "npm run dev --workspace=web",
+    "build": "npm run build --workspace=web",
+    "wallet:generate": "npm run wallet:generate --workspace=@onside/settlement",
+    "txline:subscribe": "npm run subscribe --workspace=@onside/txline-setup",
+    "txline:fixtures": "npm run fixtures --workspace=@onside/txline-setup",
+    "txline:record": "npm run record --workspace=@onside/txline-setup --",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

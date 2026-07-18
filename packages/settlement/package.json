@@ -1,0 +1,16 @@
+{
+  "name": "@onside/settlement",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/settler.ts",
+  "types": "src/settler.ts",
+  "scripts": {
+    "wallet:generate": "tsx src/generate-wallet.ts"
+  },
+  "dependencies": {
+    "@onside/signal-engine": "*",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0"
+  }
+}
