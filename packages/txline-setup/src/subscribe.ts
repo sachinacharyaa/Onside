@@ -1,12 +1,21 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import * as anchor from "@coral-xyz/anchor";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_2022_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddressSync,
 } from "@solana/spl-token";
-import { Connection, Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 import bs58 from "bs58";
 import nacl from "tweetnacl";
 import { loadDotEnv, txlineNetwork } from "./env.js";
@@ -94,22 +103,49 @@ async function main() {
     ASSOCIATED_TOKEN_PROGRAM_ID,
   );
 
-  console.log(`\nSubscribing: service level ${SERVICE_LEVEL_ID}, ${DURATION_WEEKS} weeks...`);
-  const txSig = await program.methods
-    .subscribe(SERVICE_LEVEL_ID, DURATION_WEEKS)
-    .accounts({
-      user: keypair.publicKey,
-      pricingMatrix: pricingMatrixPda,
-      tokenMint: txlTokenMint,
-      userTokenAccount,
-      tokenTreasuryVault,
-      tokenTreasuryPda,
-      tokenProgram: TOKEN_2022_PROGRAM_ID,
-      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      systemProgram: SystemProgram.programId,
-    })
-    .rpc();
-  console.log("Subscribe tx:", txSig);
+  // The program requires the user's TxL token account to exist, even for
+  // the free tier (no TxL is actually debited). Create it if missing.
+  if (!(await connection.getAccountInfo(userTokenAccount))) {
+    console.log("\nCreating TxL token account (one-time, rent only)...");
+    const createAtaTx = new Transaction().add(
+      createAssociatedTokenAccountInstruction(
+        keypair.publicKey,
+        userTokenAccount,
+        keypair.publicKey,
+        txlTokenMint,
+        TOKEN_2022_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+      ),
+    );
+    const ataSig = await sendAndConfirmTransaction(connection, createAtaTx, [keypair], {
+      commitment: "confirmed",
+    });
+    console.log("Token account created:", ataSig);
+  }
+
+  // Re-activating an existing subscription: pass its tx signature as an arg
+  // to skip sending a new subscribe transaction.
+  let txSig = process.argv[2];
+  if (txSig) {
+    console.log("\nReusing existing subscribe tx:", txSig);
+  } else {
+    console.log(`\nSubscribing: service level ${SERVICE_LEVEL_ID}, ${DURATION_WEEKS} weeks...`);
+    txSig = await program.methods
+      .subscribe(SERVICE_LEVEL_ID, DURATION_WEEKS)
+      .accounts({
+        user: keypair.publicKey,
+        pricingMatrix: pricingMatrixPda,
+        tokenMint: txlTokenMint,
+        userTokenAccount,
+        tokenTreasuryVault,
+        tokenTreasuryPda,
+        tokenProgram: TOKEN_2022_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
+      })
+      .rpc();
+    console.log("Subscribe tx:", txSig);
+  }
 
   // ── 2-4. guest JWT -> sign -> activate ─────────────────────────────
   const authRes = await fetch(`${net.apiOrigin}/auth/guest/start`, { method: "POST" });
@@ -125,18 +161,28 @@ async function main() {
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${jwt}` },
     body: JSON.stringify({ txSig, walletSignature, leagues: SELECTED_LEAGUES }),
   });
+  const activationBody = await activateRes.text();
   if (!activateRes.ok) {
-    throw new Error(`activation failed: ${activateRes.status} ${await activateRes.text()}`);
+    throw new Error(`activation failed: ${activateRes.status} ${activationBody}`);
   }
-  const activation = (await activateRes.json()) as { token?: string } | string;
-  const apiToken = typeof activation === "string" ? activation : (activation.token ?? "");
+  // The endpoint may return raw text (the token itself) or JSON {token}.
+  let apiToken = activationBody.trim();
+  try {
+    const parsed = JSON.parse(activationBody) as { token?: string } | string;
+    apiToken = typeof parsed === "string" ? parsed : (parsed.token ?? apiToken);
+  } catch {
+    /* plain-text token */
+  }
   if (!apiToken) throw new Error("activation response contained no token");
 
   console.log("\nAPI token activated.");
 
-  // ── 5. persist into .env ───────────────────────────────────────────
-  const envPath = join(process.cwd(), ".env");
-  if (existsSync(envPath)) {
+  // ── 5. persist into the repo-root .env ─────────────────────────────
+  const here = dirname(fileURLToPath(import.meta.url));
+  const envPath = [join(here, "../../../.env"), join(process.cwd(), ".env")].find((p) =>
+    existsSync(p),
+  );
+  if (envPath) {
     let env = readFileSync(envPath, "utf8");
     const setVar = (key: string, value: string) => {
       env = env.match(new RegExp(`^${key}=`, "m"))
