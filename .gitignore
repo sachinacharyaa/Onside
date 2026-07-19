@@ -5,7 +5,6 @@ dist/
 *.tsbuildinfo
 .DS_Store
 apps/web/.data/
-api/stream-bundle.cjs
 
 # Anchor build artifacts
 packages/settlement/anchor-program/target/
