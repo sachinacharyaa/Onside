@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Onside">
+  <defs>
+    <linearGradient id="gold" x1="80" y1="60" x2="420" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F0D56A"/>
+      <stop offset="45%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#A8841E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- plate -->
+  <rect width="512" height="512" rx="72" fill="#141414"/>
+
+  <!-- motion swooshes -->
+  <path fill="url(#gold)" d="M78 338c52 78 168 118 286 86 18-5 22 22 4 28C220 492 78 448 42 352c-8-22 20-34 36-14z"/>
+  <path fill="url(#gold)" d="M96 292c38 64 128 98 224 74 16-4 20 20 4 25C204 424 84 382 62 304c-6-20 22-28 34-12z"/>
+  <path fill="url(#gold)" d="M118 258c28 48 96 74 170 56 14-3 18 18 3 22-78 22-168-8-188-68-5-16 20-24 15-10z"/>
+
+  <!-- ball -->
+  <g transform="translate(256 214)">
+    <circle r="118" fill="url(#gold)"/>
+    <circle r="118" fill="none" stroke="#1a1a1a" stroke-width="10"/>
+    <!-- classic panel seams -->
+    <path fill="#1a1a1a" d="M0-78l24 17-9 28h-30l-9-28z"/>
+    <path fill="none" stroke="#1a1a1a" stroke-width="7" stroke-linejoin="round"
+      d="M-70-48c22-28 58-44 70-44s48 16 70 44
+         M-88 10c18-36 52-62 88-62s70 26 88 62
+         M-70 48c-18-30-18-66 0-96M70 48c18-30 18-66 0-96
+         M-96 8c28 22 62 34 96 34s68-12 96-34
+         M-48 78c14 18 32 28 48 28s34-10 48-28
+         M0 40v66M-52-8l-46 54M52-8l46 54"/>
+  </g>
+
+  <!-- stars -->
+  <g fill="url(#gold)">
+    <path transform="translate(368 96) scale(1.15)" d="M0-18l5.1 10.3 11.4 1.7-8.2 8 1.9 11.4L0 7.6l-10.2 5.4 1.9-11.4-8.2-8 11.4-1.7z"/>
+    <path transform="translate(412 148)" d="M0-10l2.4 4.8h5.3l-4.3 3.1 1.6 5.2L0-0.4l-5 3.5 1.6-5.2-4.3-3.1h5.3z"/>
+    <path transform="translate(390 188) scale(0.75)" d="M0-10l2.4 4.8h5.3l-4.3 3.1 1.6 5.2L0-0.4l-5 3.5 1.6-5.2-4.3-3.1h5.3z"/>
+    <path transform="translate(430 210) scale(0.55)" d="M0-10l2.4 4.8h5.3l-4.3 3.1 1.6 5.2L0-0.4l-5 3.5 1.6-5.2-4.3-3.1h5.3z"/>
+    <circle cx="348" cy="168" r="3.5"/>
+    <circle cx="404" cy="248" r="2.5"/>
+  </g>
+</svg>

@@ -1,5 +1,3 @@
-"use client";
-
 import type { MatchEvent, MatchMeta } from "@onside/ingestion";
 
 const W = 560;
@@ -35,7 +33,7 @@ export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: Matc
   return (
     <section
       aria-label="Market chart"
-      className="rounded-md border border-hairline bg-chalk-2/50 p-4"
+      className="rounded-2xl border border-hairline bg-panel/80 p-4"
     >
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-display text-lg font-semibold uppercase tracking-wide">

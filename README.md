@@ -15,11 +15,11 @@ cp .env.example .env        # defaults work out of the box (replay + simulated s
 # Phase 1 milestone — full pipeline headless in the console
 npm run demo:headless
 
-# Phase 2+ — live feed UI at http://localhost:3000
+# Phase 2+ — Vite React UI + API (fast HMR)
 npm run dev
 ```
 
-Open http://localhost:3000 — the match replays automatically: odds chart updates per event, the narration feed streams one line per triggered rule, and the settlement card flips from PENDING to SETTLED at full time. The "Replay this match" button restarts the run.
+Open http://localhost:5173 — home shows match posters; **Watch agent** opens the live stage. Vite serves the UI; a lightweight Node API on `:3001` streams agent events (proxied as `/api/*`).
 
 ## Architecture
 

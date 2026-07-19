@@ -1,5 +1,3 @@
-"use client";
-
 import type { NarrationLine } from "@onside/narration-engine";
 import { executedLabel, isExecuted, sideOfLine, type TeamSide } from "@/lib/log-model";
 import type { DecisionAction } from "@/lib/stream-types";
@@ -44,7 +42,7 @@ export function DecisionLog({
   return (
     <section
       aria-label="Decision log"
-      className="flex h-full flex-col rounded-md border border-hairline bg-chalk-2/50"
+      className="flex h-full flex-col rounded-2xl border border-hairline bg-panel/80 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
     >
       <header className="border-b border-hairline px-5 py-4 sm:px-6">
         <h2 className="font-display text-2xl font-semibold uppercase tracking-wide">

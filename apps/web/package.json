@@ -2,10 +2,14 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "concurrently -k -n api,web -c yellow,cyan \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:web": "vite",
+    "dev:api": "tsx server/index.ts",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "cross-env NODE_ENV=production tsx server/index.ts"
   },
   "dependencies": {
     "@onside/agent-runtime": "*",
@@ -13,16 +17,23 @@
     "@onside/narration-engine": "*",
     "@onside/settlement": "*",
     "@onside/signal-engine": "*",
-    "next": "^15.3.3",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.7",
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.5.2",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
     "tailwindcss": "^4.1.7",
-    "typescript": "^5.7.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.3.5"
   }
 }

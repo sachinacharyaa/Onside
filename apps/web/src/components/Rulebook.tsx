@@ -1,5 +1,3 @@
-"use client";
-
 import { rulesConfig } from "@onside/signal-engine";
 
 /**
@@ -29,7 +27,7 @@ export function Rulebook({ settleThreshold }: { settleThreshold: number }) {
   return (
     <section
       aria-label="The rulebook"
-      className="rounded-md border border-hairline bg-chalk-2/50 p-4 sm:p-5"
+      className="rounded-2xl border border-hairline bg-panel/80 p-4 sm:p-5"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-display text-lg font-semibold uppercase tracking-wide">

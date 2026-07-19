@@ -10,6 +10,7 @@
   "scripts": {
     "demo:headless": "npm run demo --workspace=@onside/agent-runtime",
     "dev": "npm run dev --workspace=web",
+    "dev:web": "npm run dev:web --workspace=web",
     "build": "npm run build --workspace=web",
     "wallet:generate": "npm run wallet:generate --workspace=@onside/settlement",
     "txline:subscribe": "npm run subscribe --workspace=@onside/txline-setup",

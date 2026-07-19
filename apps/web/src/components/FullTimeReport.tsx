@@ -1,5 +1,3 @@
-"use client";
-
 import type { MatchMeta } from "@onside/ingestion";
 import type { SettlementProof } from "@onside/settlement";
 import { SealIcon } from "./Stamp";
@@ -30,12 +28,12 @@ export function FullTimeReport({
   return (
     <section
       aria-label="Full-time report"
-      className={`rounded-md border p-4 sm:p-5 ${
+      className={`rounded-2xl border p-4 sm:p-5 ${
         status === "settled"
-          ? "border-turf bg-turf/5"
+          ? "border-turf bg-turf/10 shadow-[0_0_40px_var(--color-glow)]"
           : status === "settling"
-            ? "border-caution bg-caution/5"
-            : "border-hairline bg-chalk-2/50"
+            ? "border-caution bg-caution/10"
+            : "border-hairline bg-panel/80"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -78,7 +76,7 @@ export function FullTimeReport({
           {proof.explorerUrl ? (
             <p>
               <a
-                href={proof.explorerUrl}
+                to={proof.explorerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-turf underline decoration-turf/50 underline-offset-4 hover:decoration-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
