@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm install",
+  "buildCommand": "npm run build --workspace=web",
+  "outputDirectory": "apps/web/dist",
+  "functions": {
+    "api/stream.ts": {
+      "maxDuration": 300,
+      "includeFiles": "packages/ingestion/replay-data/**"
+    },
+    "api/wallet.ts": {
+      "maxDuration": 10
+    },
+    "api/settlement/latest.ts": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}

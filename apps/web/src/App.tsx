@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import { DocsPage } from "./pages/DocsPage";
 import { HomePage } from "./pages/HomePage";
 import { LivePage } from "./pages/LivePage";
 import { ProofPage } from "./pages/ProofPage";
@@ -10,6 +11,7 @@ export function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/live" element={<LivePage />} />
       <Route path="/rulebook" element={<RulebookPage />} />
+      <Route path="/docs" element={<DocsPage />} />
       <Route path="/proof" element={<ProofPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

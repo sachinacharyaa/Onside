@@ -1,0 +1,6 @@
+packages/settlement/anchor-program/target
+packages/settlement/anchor-program/.anchor
+apps/web/.next
+**/*.tsbuildinfo
+agent-transcripts
+.cursor

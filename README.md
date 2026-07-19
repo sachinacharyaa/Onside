@@ -100,6 +100,26 @@ The live client authenticates (guest JWT + activated API token), consumes the `/
 
 Deltas are implied-probability percentage points (`100 / decimalOdds`). Change them in one place: `packages/signal-engine/src/rules.config.ts`.
 
+## Deploy on Vercel
+
+The UI is a Vite SPA; `/api/*` runs as Node serverless functions (SSE stream included).
+
+1. Push this repo to GitHub, then [Import](https://vercel.com/new) it in Vercel (Root Directory = repo root — leave blank).
+2. `vercel.json` already sets install/build/output. Do **not** set Root Directory to `apps/web` or the API folder will be skipped.
+3. Add Environment Variables (Production + Preview) from `.env.example`. Minimum for a working demo:
+   - `USE_REPLAY_MODE=true`
+   - `REPLAY_SPEED=120` (Hobby ~60s limit) or `60` on Pro
+   - `AGENT_WALLET_SECRET_KEY` (funded devnet key) for real settlement txs
+   - Optional: `TXLINE_*` only if you flip to live mode
+4. Deploy. Open the `.vercel.app` URL — home, live stage (`/live`), and `/api/wallet` should work.
+
+CLI alternative from the repo root:
+
+```bash
+npx vercel          # preview
+npx vercel --prod   # production
+```
+
 ## Demo script (2 minutes)
 
 1. **0:00** — "This agent watches a live match, decides autonomously using explicit rules — no AI black box — and settles its own market on-chain."
