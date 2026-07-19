@@ -12,6 +12,7 @@
     "dev": "npm run dev --workspace=web",
     "dev:web": "npm run dev:web --workspace=web",
     "build": "npm run build --workspace=web",
+    "build:api": "node scripts/bundle-api.mjs",
     "wallet:generate": "npm run wallet:generate --workspace=@onside/settlement",
     "txline:subscribe": "npm run subscribe --workspace=@onside/txline-setup",
     "txline:fixtures": "npm run fixtures --workspace=@onside/txline-setup",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@types/node": "^26.1.1",
     "@vercel/node": "^5.8.26",
+    "esbuild": "^0.28.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }

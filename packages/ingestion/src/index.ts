@@ -1,4 +1,3 @@
-import { createRequire } from "node:module";
 import { replayRegistry } from "./registry.js";
 import { ReplayClient, type ReplayFile } from "./replay-client.js";
 import { TxlineClient } from "./txline-client.js";
@@ -9,8 +8,6 @@ export { ReplayClient, type ReplayFile, type ReplayClientOptions } from "./repla
 export { TxlineClient, type TxlineClientOptions } from "./txline-client.js";
 export { TxlineNormalizer } from "./txline-normalize.js";
 export { replayRegistry, listReplays, getReplayById, type ReplayEntry } from "./registry.js";
-
-const require = createRequire(import.meta.url);
 
 export function loadSampleMatch(): ReplayFile {
   return replayRegistry[0].replay;
@@ -24,7 +21,15 @@ export function loadReplayFile(name?: string): ReplayFile {
   if (!name) return loadSampleMatch();
   const registered = replayRegistry.find((entry) => entry.file === name);
   if (registered) return registered.replay;
-  return require(`../replay-data/${name}`) as ReplayFile;
+  // Dynamic disk load for locally recorded files (not used in the Vercel bundle).
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { createRequire } = require("node:module") as typeof import("node:module");
+    const req = createRequire(__filename);
+    return req(`../replay-data/${name}`) as ReplayFile;
+  } catch {
+    throw new Error(`Replay file not in registry and not on disk: ${name}`);
+  }
 }
 
 export type SourceConfig = {
