@@ -7,7 +7,7 @@
   "functions": {
     "api/stream.ts": {
       "maxDuration": 300,
-      "includeFiles": "{packages/**,apps/web/server/**}"
+      "includeFiles": "packages/ingestion/replay-data/**"
     },
     "api/wallet.ts": {
       "maxDuration": 10
