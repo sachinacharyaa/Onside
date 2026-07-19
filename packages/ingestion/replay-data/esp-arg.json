@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "matchId": "wc2026-sf-esp-arg",
+    "homeTeam": "Spain",
+    "awayTeam": "Argentina",
+    "competition": "FIFA World Cup 2026 — Semi-final"
+  },
+  "events": [
+    { "matchId": "wc2026-sf-esp-arg", "minute": 0, "type": "kickoff", "odds": { "home": 2.40, "draw": 3.30, "away": 2.90 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-14T18:00:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 8, "type": "odds_tick", "odds": { "home": 2.35, "draw": 3.30, "away": 3.00 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-14T18:08:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 21, "type": "goal", "team": "away", "player": "Álvarez", "odds": { "home": 4.20, "draw": 3.60, "away": 1.85 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-14T18:21:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 27, "type": "odds_tick", "odds": { "home": 4.40, "draw": 3.70, "away": 1.80 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-14T18:27:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 36, "type": "card", "team": "home", "card": "yellow", "player": "Rodri", "odds": { "home": 4.50, "draw": 3.70, "away": 1.78 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-14T18:36:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 45, "type": "odds_tick", "odds": { "home": 4.60, "draw": 3.80, "away": 1.75 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-14T18:45:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 49, "type": "goal", "team": "home", "player": "Pedri", "odds": { "home": 2.90, "draw": 3.20, "away": 2.45 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-14T19:04:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 58, "type": "odds_tick", "odds": { "home": 2.80, "draw": 3.20, "away": 2.50 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-14T19:13:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 70, "type": "card", "team": "home", "card": "red", "player": "Carvajal", "odds": { "home": 3.60, "draw": 3.30, "away": 2.05 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-14T19:25:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 75, "type": "odds_tick", "odds": { "home": 3.80, "draw": 3.40, "away": 1.95 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-14T19:30:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 81, "type": "goal", "team": "away", "player": "Álvarez", "odds": { "home": 8.50, "draw": 5.50, "away": 1.30 }, "scoreHome": 1, "scoreAway": 2, "timestamp": "2026-07-14T19:36:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 87, "type": "odds_tick", "odds": { "home": 12.00, "draw": 7.00, "away": 1.18 }, "scoreHome": 1, "scoreAway": 2, "timestamp": "2026-07-14T19:42:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 90, "type": "odds_tick", "odds": { "home": 21.00, "draw": 10.00, "away": 1.08 }, "scoreHome": 1, "scoreAway": 2, "timestamp": "2026-07-14T19:45:00Z" },
+    { "matchId": "wc2026-sf-esp-arg", "minute": 93, "type": "fulltime", "odds": { "home": 51.00, "draw": 26.00, "away": 1.01 }, "scoreHome": 1, "scoreAway": 2, "timestamp": "2026-07-14T19:48:00Z" }
+  ]
+}

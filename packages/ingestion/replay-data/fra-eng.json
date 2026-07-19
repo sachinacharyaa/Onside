@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "matchId": "wc2026-gs-fra-eng",
+    "homeTeam": "France",
+    "awayTeam": "England",
+    "competition": "FIFA World Cup 2026 — Group stage"
+  },
+  "events": [
+    { "matchId": "wc2026-gs-fra-eng", "minute": 0, "type": "kickoff", "odds": { "home": 2.75, "draw": 3.25, "away": 2.65 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-12T18:00:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 10, "type": "odds_tick", "odds": { "home": 2.70, "draw": 3.20, "away": 2.70 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-12T18:10:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 22, "type": "odds_tick", "odds": { "home": 2.85, "draw": 3.10, "away": 2.60 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-12T18:22:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 34, "type": "goal", "team": "away", "player": "Kane", "odds": { "home": 4.80, "draw": 3.50, "away": 1.75 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-12T18:34:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 41, "type": "odds_tick", "odds": { "home": 5.00, "draw": 3.60, "away": 1.70 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-12T18:41:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 45, "type": "odds_tick", "odds": { "home": 4.90, "draw": 3.60, "away": 1.72 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-12T18:45:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 55, "type": "odds_tick", "odds": { "home": 4.40, "draw": 3.50, "away": 1.80 }, "scoreHome": 0, "scoreAway": 1, "timestamp": "2026-07-12T19:10:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 67, "type": "goal", "team": "home", "player": "Griezmann", "odds": { "home": 2.60, "draw": 2.90, "away": 2.85 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-12T19:22:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 74, "type": "odds_tick", "odds": { "home": 2.70, "draw": 2.75, "away": 2.90 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-12T19:29:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 82, "type": "odds_tick", "odds": { "home": 2.95, "draw": 2.45, "away": 3.05 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-12T19:37:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 88, "type": "odds_tick", "odds": { "home": 3.40, "draw": 1.95, "away": 3.60 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-12T19:43:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 90, "type": "odds_tick", "odds": { "home": 4.00, "draw": 1.60, "away": 4.20 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-12T19:45:00Z" },
+    { "matchId": "wc2026-gs-fra-eng", "minute": 94, "type": "fulltime", "odds": { "home": 15.00, "draw": 1.05, "away": 17.00 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-12T19:49:00Z" }
+  ]
+}

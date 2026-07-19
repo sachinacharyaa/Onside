@@ -1,4 +1,5 @@
 import { createRequire } from "node:module";
+import { replayRegistry } from "./registry.js";
 import { ReplayClient, type ReplayFile } from "./replay-client.js";
 import { TxlineClient } from "./txline-client.js";
 import type { MatchEventSource } from "./types.js";
@@ -7,16 +8,22 @@ export type { MatchEvent, MatchEventSource, MatchMeta } from "./types.js";
 export { ReplayClient, type ReplayFile, type ReplayClientOptions } from "./replay-client.js";
 export { TxlineClient, type TxlineClientOptions } from "./txline-client.js";
 export { TxlineNormalizer } from "./txline-normalize.js";
+export { replayRegistry, listReplays, getReplayById, type ReplayEntry } from "./registry.js";
 
 const require = createRequire(import.meta.url);
 
 export function loadSampleMatch(): ReplayFile {
-  return require("../replay-data/sample-match.json") as ReplayFile;
+  return replayRegistry[0].replay;
 }
 
-/** Loads a replay file from replay-data/ by name (e.g. "txline-123.json"). */
+/**
+ * Loads a replay by registry file name or dynamically from replay-data/
+ * (e.g. a recorded "txline-123.json").
+ */
 export function loadReplayFile(name?: string): ReplayFile {
   if (!name) return loadSampleMatch();
+  const registered = replayRegistry.find((entry) => entry.file === name);
+  if (registered) return registered.replay;
   return require(`../replay-data/${name}`) as ReplayFile;
 }
 
