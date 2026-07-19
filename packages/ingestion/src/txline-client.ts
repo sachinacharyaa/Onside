@@ -21,14 +21,15 @@ type SseMessage = { id?: string; event?: string; data: string };
  * SSE streams, normalizing everything into MatchEvent.
  *
  * Implements the exact same MatchEventSource interface as ReplayClient —
- * swapping live/replay is a config flip, never a code change downstream.
+ * swapping live/replay is a config flip (`USE_REPLAY_MODE`), never a
+ * downstream code change.
  *
  * Docs: https://txline.txodds.com/documentation/examples/streaming-data
  */
 export class TxlineClient extends EventEmitter implements MatchEventSource {
   readonly meta: MatchMeta;
   private readonly opts: Required<TxlineClientOptions>;
-  private readonly normalizer: TxlineNormalizer;
+  readonly normalizer: TxlineNormalizer;
   private jwt: string | null = null;
   private stopped = true;
   private aborters: AbortController[] = [];
@@ -57,8 +58,6 @@ export class TxlineClient extends EventEmitter implements MatchEventSource {
     this.aborters = [];
   }
 
-  // ─── auth ────────────────────────────────────────────────────────────
-
   private async renewJwt(): Promise<string> {
     const res = await fetch(`${this.opts.apiUrl}/auth/guest/start`, { method: "POST" });
     if (!res.ok) throw new Error(`guest auth failed: ${res.status}`);
@@ -82,18 +81,15 @@ export class TxlineClient extends EventEmitter implements MatchEventSource {
       await this.renewJwt();
       res = await fetch(`${this.opts.apiUrl}${path}`, { headers: this.headers() });
     }
-    if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`);
+    if (!res.ok) throw new Error(`GET ${path} failed: ${res.status} ${await res.text()}`);
     return res.json();
   }
-
-  // ─── main flow ───────────────────────────────────────────────────────
 
   private async run(): Promise<void> {
     try {
       await this.renewJwt();
       await this.resolveFixtureMeta();
       await this.seedFromSnapshots();
-      // Consume both streams concurrently; each reconnects independently.
       await Promise.all([this.consumeStream("scores"), this.consumeStream("odds")]);
     } catch (err) {
       if (!this.stopped) {
@@ -108,17 +104,26 @@ export class TxlineClient extends EventEmitter implements MatchEventSource {
       const fixture = fixtures.find(
         (f) => Number(f.FixtureId ?? f.fixtureId) === this.opts.fixtureId,
       );
-      if (!fixture) return;
+      if (!fixture) {
+        this.meta.competition = `TxLINE fixture ${this.opts.fixtureId}`;
+        return;
+      }
       const p1IsHome = fixture.Participant1IsHome ?? fixture.participant1IsHome ?? true;
-      const p1 = String(fixture.Participant1 ?? fixture.participant1 ?? "Home");
-      const p2 = String(fixture.Participant2 ?? fixture.participant2 ?? "Away");
+      const p1 = String(
+        fixture.Participant1 ?? fixture.participant1 ?? `Team ${fixture.Participant1Id ?? "1"}`,
+      );
+      const p2 = String(
+        fixture.Participant2 ?? fixture.participant2 ?? `Team ${fixture.Participant2Id ?? "2"}`,
+      );
       this.meta.homeTeam = p1IsHome ? p1 : p2;
       this.meta.awayTeam = p1IsHome ? p2 : p1;
       this.meta.competition = String(
-        fixture.Competition ?? fixture.competition ?? "TxLINE live feed",
+        fixture.Competition ??
+          fixture.competition ??
+          `TxLINE competition ${fixture.CompetitionId ?? fixture.competitionId ?? ""}`.trim(),
       );
     } catch {
-      // Metadata is cosmetic; the pipeline works without it.
+      /* Metadata is cosmetic; the pipeline works without it. */
     }
   }
 
@@ -128,13 +133,20 @@ export class TxlineClient extends EventEmitter implements MatchEventSource {
       const scores = (await this.apiGet(
         `/api/scores/snapshot/${this.opts.fixtureId}`,
       )) as any[];
-      for (const record of scores) this.emitEvents(this.normalizer.scoreRecordToEvents(record));
+      const rows = Array.isArray(scores) ? scores : [scores];
+      // Apply chronologically (Seq ascending) so goals accumulate correctly.
+      rows
+        .filter(Boolean)
+        .sort((a, b) => Number(a.Seq ?? a.seq ?? 0) - Number(b.Seq ?? b.seq ?? 0))
+        .forEach((record) => this.emitEvents(this.normalizer.scoreRecordToEvents(record)));
     } catch {
       /* fixture may not have started yet */
     }
     try {
       const odds = (await this.apiGet(`/api/odds/snapshot/${this.opts.fixtureId}`)) as any[];
-      for (const record of odds) {
+      const rows = Array.isArray(odds) ? odds : [odds];
+      for (const record of rows) {
+        if (!record) continue;
         const event = this.normalizer.oddsRecordToEvent(record, 0);
         if (event) this.emitEvents([event]);
       }
@@ -153,8 +165,6 @@ export class TxlineClient extends EventEmitter implements MatchEventSource {
       }
     }
   }
-
-  // ─── SSE ─────────────────────────────────────────────────────────────
 
   private async consumeStream(kind: "scores" | "odds"): Promise<void> {
     let backoffMs = 2000;
@@ -177,19 +187,20 @@ export class TxlineClient extends EventEmitter implements MatchEventSource {
         for await (const message of this.readSse(res)) {
           if (this.stopped) return;
           if (message.event === "heartbeat" || !message.data) continue;
-          let record: unknown;
+          let record: any;
           try {
             record = JSON.parse(message.data);
           } catch {
             continue;
           }
+          // Streams are multiplexed across fixtures — ignore others.
+          const fid = Number(record?.FixtureId ?? record?.fixtureId);
+          if (Number.isFinite(fid) && fid !== this.opts.fixtureId) continue;
+
           if (kind === "scores") {
-            this.emitEvents(this.normalizer.scoreRecordToEvents(record as any));
+            this.emitEvents(this.normalizer.scoreRecordToEvents(record));
           } else {
-            const event = this.normalizer.oddsRecordToEvent(
-              record as any,
-              this.opts.oddsThrottleMs,
-            );
+            const event = this.normalizer.oddsRecordToEvent(record, this.opts.oddsThrottleMs);
             if (event) this.emitEvents([event]);
           }
         }
@@ -235,7 +246,7 @@ export class TxlineClient extends EventEmitter implements MatchEventSource {
       const i = line.indexOf(":");
       const field = i === -1 ? line : line.slice(0, i);
       const value = i === -1 ? "" : line.slice(i + 1).replace(/^ /, "");
-      if (field === "data") message.data += value;
+      if (field === "data") message.data += (message.data ? "\n" : "") + value;
       if (field === "event") message.event = value;
       if (field === "id") message.id = value;
     }

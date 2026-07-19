@@ -1,7 +1,8 @@
-import { txlineNetwork } from "./env.js";
+import { loadDotEnv, txlineNetwork } from "./env.js";
 
 /** Small authenticated TxLINE API helper for the setup/recorder scripts. */
 export async function txlineApi() {
+  loadDotEnv();
   const net = txlineNetwork();
   const apiOrigin = process.env.TXLINE_API_URL ?? net.apiOrigin;
   const apiToken = process.env.TXLINE_API_TOKEN;

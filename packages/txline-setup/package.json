@@ -6,7 +6,9 @@
   "scripts": {
     "subscribe": "tsx src/subscribe.ts",
     "record": "tsx src/record-match.ts",
-    "fixtures": "tsx src/list-fixtures.ts"
+    "fixtures": "tsx src/list-fixtures.ts",
+    "verify": "tsx src/verify.ts",
+    "live-smoke": "tsx src/live-smoke.ts"
   },
   "dependencies": {
     "@onside/ingestion": "*",
