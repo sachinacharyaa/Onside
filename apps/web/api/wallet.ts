@@ -3,8 +3,8 @@ import { Keypair } from "@solana/web3.js";
 import bs58 from "bs58";
 
 /**
- * Self-contained wallet status for Vercel.
- * No relative imports into apps/web (avoids bundling the agent / replay JSON).
+ * Fallback when Vercel Root Directory is set to `apps/web`.
+ * Prefer repo-root `/api/wallet.ts` with Root Directory blank.
  */
 export default function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");

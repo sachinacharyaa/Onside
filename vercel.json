@@ -7,15 +7,13 @@
   "functions": {
     "api/stream.ts": {
       "maxDuration": 300,
-      "includeFiles": "{packages/**,apps/web/server/**,node_modules/@onside/**}"
+      "includeFiles": "{packages/**,apps/web/server/**}"
     },
     "api/wallet.ts": {
-      "maxDuration": 10,
-      "includeFiles": "apps/web/server/light-api.ts"
+      "maxDuration": 10
     },
     "api/settlement/latest.ts": {
-      "maxDuration": 10,
-      "includeFiles": "apps/web/server/light-api.ts"
+      "maxDuration": 10
     }
   },
   "rewrites": [
