@@ -68,7 +68,7 @@ npm run txline:fixtures             # list covered fixtures, pick an id
 
 # go live:            USE_REPLAY_MODE=false + TXLINE_FIXTURE_ID=<id> in .env
 # or record a real finished match (6h–2wk old) into the replay path:
-npm run txline:record -- <fixtureId>   # then REPLAY_FILE=txline-<fixtureId>.json
+npm run txline:record -- <fixtureId>   # WRITE_SAMPLE=1 also refreshes sample-match.json
 ```
 
 The live client authenticates (guest JWT + activated API token), consumes the `/api/scores/stream` and `/api/odds/stream` SSE feeds, and normalizes TxLINE records (soccer game phases, `game_finalised`, StablePrice 1X2 lines) into the same `MatchEvent` schema the replay uses — downstream code is untouched. Details in `packages/txline-setup/README.md`.
@@ -83,7 +83,8 @@ The live client authenticates (guest JWT + activated API token), consumes the `/
 | `TXLINE_API_TOKEN` | empty | Activated API token (written by `txline:subscribe`) |
 | `TXLINE_FIXTURE_ID` | empty | Fixture to follow live (from `txline:fixtures`) |
 | `REPLAY_FILE` | empty | Alternate replay file, e.g. `txline-<id>.json` from `txline:record` |
-| `REPLAY_INTERVAL_MS` | `1500` | Demo pacing between replayed events |
+| `REPLAY_SPEED` | unset | Compress real timestamps (e.g. `60` ≈ 2 min for a full match) |
+| `REPLAY_INTERVAL_MS` | `1500` | Fixed gap when `REPLAY_SPEED` is unset / 0 |
 | `CONFIDENCE_SETTLE_THRESHOLD` | `80` | Signals at/above this confidence trigger actions |
 | `SOLANA_RPC_URL` | devnet | RPC endpoint |
 | `AGENT_WALLET_SECRET_KEY` | empty | base58 devnet keypair; empty = simulated settlement |

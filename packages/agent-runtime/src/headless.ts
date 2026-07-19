@@ -13,8 +13,11 @@ import type { Decision } from "./agent.js";
  * Run with: npm run demo:headless
  */
 const config = loadConfig();
-// Speed the console demo up unless the user pinned an interval.
-if (process.env.REPLAY_INTERVAL_MS === undefined) config.replayIntervalMs = 200;
+// Prefer timestamp compression for historical demos; fall back to a fast
+// fixed interval only when REPLAY_SPEED is unset.
+if (process.env.REPLAY_SPEED === undefined && process.env.REPLAY_INTERVAL_MS === undefined) {
+  config.replaySpeed = 90;
+}
 
 if (!config.walletSecretKey) {
   console.error("AGENT_WALLET_SECRET_KEY is missing. Settlement cannot run without a funded wallet.");

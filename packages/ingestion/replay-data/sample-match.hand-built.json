@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "matchId": "wc2026-qf-bra-fra",
+    "homeTeam": "Brazil",
+    "awayTeam": "France",
+    "competition": "FIFA World Cup 2026 — Quarter-final"
+  },
+  "events": [
+    { "matchId": "wc2026-qf-bra-fra", "minute": 0, "type": "kickoff", "odds": { "home": 2.10, "draw": 3.40, "away": 3.60 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-10T18:00:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 4, "type": "odds_tick", "odds": { "home": 2.05, "draw": 3.40, "away": 3.70 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-10T18:04:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 12, "type": "odds_tick", "odds": { "home": 2.15, "draw": 3.30, "away": 3.50 }, "scoreHome": 0, "scoreAway": 0, "timestamp": "2026-07-10T18:12:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 17, "type": "goal", "team": "home", "player": "Vinícius Jr.", "odds": { "home": 1.55, "draw": 4.20, "away": 6.50 }, "scoreHome": 1, "scoreAway": 0, "timestamp": "2026-07-10T18:17:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 23, "type": "odds_tick", "odds": { "home": 1.50, "draw": 4.40, "away": 7.00 }, "scoreHome": 1, "scoreAway": 0, "timestamp": "2026-07-10T18:23:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 31, "type": "card", "team": "away", "card": "yellow", "player": "Tchouaméni", "odds": { "home": 1.48, "draw": 4.50, "away": 7.20 }, "scoreHome": 1, "scoreAway": 0, "timestamp": "2026-07-10T18:31:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 38, "type": "odds_tick", "odds": { "home": 1.48, "draw": 4.50, "away": 7.20 }, "scoreHome": 1, "scoreAway": 0, "timestamp": "2026-07-10T18:38:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 45, "type": "odds_tick", "odds": { "home": 1.45, "draw": 4.60, "away": 7.50 }, "scoreHome": 1, "scoreAway": 0, "timestamp": "2026-07-10T18:45:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 52, "type": "odds_tick", "odds": { "home": 1.62, "draw": 4.10, "away": 5.80 }, "scoreHome": 1, "scoreAway": 0, "timestamp": "2026-07-10T19:07:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 58, "type": "goal", "team": "away", "player": "Mbappé", "odds": { "home": 2.60, "draw": 3.10, "away": 2.90 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-10T19:13:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 63, "type": "card", "team": "away", "card": "red", "player": "Upamecano", "odds": { "home": 2.05, "draw": 3.30, "away": 3.90 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-10T19:18:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 66, "type": "substitution", "team": "home", "player": "Endrick on, Richarlison off", "odds": { "home": 2.00, "draw": 3.30, "away": 4.00 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-10T19:21:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 71, "type": "odds_tick", "odds": { "home": 1.85, "draw": 3.50, "away": 4.40 }, "scoreHome": 1, "scoreAway": 1, "timestamp": "2026-07-10T19:26:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 78, "type": "goal", "team": "home", "player": "Endrick", "odds": { "home": 1.25, "draw": 6.00, "away": 11.00 }, "scoreHome": 2, "scoreAway": 1, "timestamp": "2026-07-10T19:33:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 84, "type": "odds_tick", "odds": { "home": 1.15, "draw": 7.50, "away": 15.00 }, "scoreHome": 2, "scoreAway": 1, "timestamp": "2026-07-10T19:39:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 90, "type": "odds_tick", "odds": { "home": 1.05, "draw": 12.00, "away": 26.00 }, "scoreHome": 2, "scoreAway": 1, "timestamp": "2026-07-10T19:45:00Z" },
+    { "matchId": "wc2026-qf-bra-fra", "minute": 94, "type": "fulltime", "odds": { "home": 1.01, "draw": 41.00, "away": 81.00 }, "scoreHome": 2, "scoreAway": 1, "timestamp": "2026-07-10T19:49:00Z" }
+  ]
+}

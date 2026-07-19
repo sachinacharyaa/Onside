@@ -23,8 +23,8 @@ npm run txline:fixtures
 
 # 3b. or record a finished fixture (6h–2wk old) into a replay file —
 #     REAL match data through the deterministic replay path (best for judged demos)
-npm run txline:record -- <fixtureId>
-#     then set REPLAY_FILE=txline-<fixtureId>.json in .env
+WRITE_SAMPLE=1 npm run txline:record -- <fixtureId>
+#     then REPLAY_SPEED=60 (~2 min compressed playback from real timestamps)
 ```
 
 ## Notes

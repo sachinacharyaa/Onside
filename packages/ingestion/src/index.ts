@@ -30,6 +30,11 @@ export function loadReplayFile(name?: string): ReplayFile {
 export type SourceConfig = {
   useReplayMode: boolean;
   replayIntervalMs: number;
+  /**
+   * Compress real event timestamps by this factor (e.g. 60 → ~2 min demo).
+   * When unset / 0, ReplayClient uses fixed `replayIntervalMs` gaps.
+   */
+  replaySpeed?: number;
   /** Replay file name inside packages/ingestion/replay-data (default sample-match.json). */
   replayFile?: string;
   txlineApiUrl?: string;
@@ -56,5 +61,6 @@ export function createMatchEventSource(config: SourceConfig): MatchEventSource {
   }
   return new ReplayClient(loadReplayFile(config.replayFile), {
     intervalMs: config.replayIntervalMs,
+    speed: config.replaySpeed,
   });
 }

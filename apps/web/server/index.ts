@@ -98,7 +98,7 @@ function handleStream(req: import("node:http").IncomingMessage, res: import("nod
     config.replayFile = selected.file;
     config.useReplayMode = true;
   }
-  const matchId = selected?.id ?? (config.useReplayMode ? "bra-fra" : "live");
+  const matchId = selected?.id ?? (config.useReplayMode ? "fra-eng-3rd" : "live");
   const agent = createAgent(config);
 
   res.writeHead(200, {

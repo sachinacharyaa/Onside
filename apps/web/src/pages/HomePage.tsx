@@ -74,85 +74,46 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Featured match visual */}
+            {/* Featured match — typographic crest only (no stock photography) */}
             <Link
               to={`/live?match=${hero.id}`}
-              className="hero-rise-delay group relative block min-h-[22rem] overflow-hidden rounded-3xl shadow-[0_24px_80px_rgba(0,0,0,0.45)] ring-1 ring-white/10 transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turf sm:min-h-[26rem]"
+              className="hero-rise-delay group relative block min-h-[22rem] overflow-hidden rounded-3xl bg-panel shadow-[0_16px_48px_rgba(24,38,32,0.12)] ring-1 ring-hairline transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turf sm:min-h-[26rem]"
             >
-              {hero.poster ? (
-                <>
-                  <img
-                    src={hero.poster}
-                    alt={`${hero.home} vs ${hero.away}`}
-                    className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
-                  />
-                  {/* Soft edges only — leave faces / poster type clear in the middle */}
-                  <div
-                    className="absolute inset-0 bg-gradient-to-b from-black/75 via-transparent to-transparent"
-                    aria-hidden
-                  />
-                  <div
-                    className="absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-black/92 via-black/55 to-transparent"
-                    aria-hidden
-                  />
-
-                  <div className="relative flex h-full min-h-[22rem] flex-col justify-between p-6 sm:min-h-[26rem] sm:p-7">
-                    <div className="max-w-[14rem]">
-                      <p className="text-sm font-medium tracking-wide text-turf drop-shadow">
-                        {hero.tag}
-                      </p>
-                      <p className="mt-1 text-sm text-white/80 drop-shadow">{hero.competition}</p>
-                    </div>
-
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                      <p className="max-w-xs text-sm leading-relaxed text-white/90 drop-shadow sm:text-[15px]">
-                        {hero.blurb}
-                      </p>
-                      <span className="shrink-0 text-sm font-semibold text-turf drop-shadow group-hover:underline">
-                        Enter live stage →
-                      </span>
-                    </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-turf/15 via-panel to-chalk-2" />
+              <div className="relative flex h-full min-h-[22rem] flex-col justify-between p-8 sm:min-h-[26rem]">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium tracking-wide text-turf">{hero.tag}</p>
+                    <p className="mt-1 text-sm text-linesman">{hero.competition}</p>
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className="absolute inset-0 bg-gradient-to-br from-turf/20 via-panel/80 to-chalk" />
-                  <div className="relative flex h-full min-h-[22rem] flex-col justify-between p-8 sm:min-h-[26rem]">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-sm font-medium tracking-wide text-turf">{hero.tag}</p>
-                        <p className="mt-1 text-sm text-white/70">{hero.competition}</p>
-                      </div>
-                      <MatchCrest
-                        home={hero.home}
-                        away={hero.away}
-                        accent={hero.accent}
-                        className="h-24 w-24"
-                      />
-                    </div>
+                  <MatchCrest
+                    home={hero.home}
+                    away={hero.away}
+                    accent={hero.accent}
+                    className="h-24 w-24"
+                  />
+                </div>
 
-                    <div>
-                      <h2 className="font-display text-3xl font-semibold leading-snug tracking-tight text-white sm:text-4xl">
-                        {hero.home}
-                        <span className="mx-2 text-white/50">vs</span>
-                        <span className="block sm:inline">{hero.away}</span>
-                      </h2>
-                      <p className="mt-4 max-w-md text-sm leading-relaxed text-white/80 sm:text-base">
-                        {hero.blurb}
-                      </p>
-                      <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
-                        <div className="flex gap-6">
-                          <LeanDot label={hero.home} pct={hero.homeLean} tone="turf" />
-                          <LeanDot label={hero.away} pct={hero.awayLean} tone="whistle" />
-                        </div>
-                        <span className="text-sm font-semibold text-turf group-hover:underline">
-                          Enter live stage →
-                        </span>
-                      </div>
+                <div>
+                  <h2 className="font-display text-3xl font-semibold leading-snug tracking-tight text-ink sm:text-4xl">
+                    {hero.home}
+                    <span className="mx-2 text-linesman">vs</span>
+                    <span className="block sm:inline">{hero.away}</span>
+                  </h2>
+                  <p className="mt-4 max-w-md text-sm leading-relaxed text-linesman sm:text-base">
+                    {hero.blurb}
+                  </p>
+                  <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
+                    <div className="flex gap-6">
+                      <LeanDot label={hero.home} pct={hero.homeLean} tone="turf" />
+                      <LeanDot label={hero.away} pct={hero.awayLean} tone="whistle" />
                     </div>
+                    <span className="text-sm font-semibold text-turf group-hover:underline">
+                      Enter live stage →
+                    </span>
                   </div>
-                </>
-              )}
+                </div>
+              </div>
             </Link>
           </div>
 
@@ -204,70 +165,37 @@ export function HomePage() {
                 <li key={m.id}>
                   <Link
                     to={`/live?match=${m.id}`}
-                    className="group relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-3xl transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+                    className="group relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-3xl bg-panel shadow-[0_8px_28px_rgba(24,38,32,0.08)] ring-1 ring-hairline transition-all hover:ring-turf/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
                   >
-                    {m.poster ? (
-                      <>
-                        <img
-                          src={m.poster}
-                          alt=""
-                          className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div
-                          className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-transparent"
-                          aria-hidden
-                        />
-                        <div
-                          className="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-black/95 via-black/60 to-transparent"
-                          aria-hidden
-                        />
-                      </>
-                    ) : (
-                      <div className="absolute inset-0 bg-panel/40 ring-1 ring-transparent group-hover:bg-panel/70 group-hover:ring-turf/25" />
-                    )}
-
                     <div className="relative flex h-full flex-col p-6">
-                      {m.poster ? (
-                        <>
-                          <p className="text-sm font-medium tracking-wide text-turf">{m.tag}</p>
-                          <p className="mt-1 text-sm text-white/75">{m.competition}</p>
-                          <p className="mt-auto text-sm leading-relaxed text-white/90">{m.blurb}</p>
-                          <span className="mt-4 text-sm font-semibold text-turf group-hover:underline">
-                            Open live stage →
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <MatchCrest
-                            home={m.home}
-                            away={m.away}
-                            accent={m.accent}
-                            className="h-28 w-28 self-center"
-                          />
-                          <p
-                            className={`mt-auto text-center text-sm font-medium tracking-wide ${
-                              m.accent === "whistle"
-                                ? "text-whistle"
-                                : m.accent === "caution"
-                                  ? "text-caution"
-                                  : "text-turf"
-                            }`}
-                          >
-                            {m.tag}
-                          </p>
-                          <h3 className="mt-2 text-center font-display text-2xl font-semibold leading-snug tracking-tight">
-                            {m.home}
-                            <span className="mx-1.5 text-linesman">vs</span>
-                            {m.away}
-                          </h3>
-                          <p className="mt-3 flex-1 text-center text-sm leading-relaxed text-linesman">
-                            {m.blurb}
-                          </p>
-                          <span className="mt-5 text-center text-sm font-semibold text-turf group-hover:underline">
-                            Open live stage →
-                          </span>
-                        </>
-                      )}
+                      <MatchCrest
+                        home={m.home}
+                        away={m.away}
+                        accent={m.accent}
+                        className="h-28 w-28 self-center"
+                      />
+                      <p
+                        className={`mt-auto text-center text-sm font-medium tracking-wide ${
+                          m.accent === "whistle"
+                            ? "text-whistle"
+                            : m.accent === "caution"
+                              ? "text-caution"
+                              : "text-turf"
+                        }`}
+                      >
+                        {m.tag}
+                      </p>
+                      <h3 className="mt-2 text-center font-display text-2xl font-semibold leading-snug tracking-tight">
+                        {m.home}
+                        <span className="mx-1.5 text-linesman">vs</span>
+                        {m.away}
+                      </h3>
+                      <p className="mt-3 flex-1 text-center text-sm leading-relaxed text-linesman">
+                        {m.blurb}
+                      </p>
+                      <span className="mt-5 text-center text-sm font-semibold text-turf group-hover:underline">
+                        Open live stage →
+                      </span>
                     </div>
                   </Link>
                 </li>

@@ -1,43 +1,43 @@
 @import "tailwindcss";
 
 /*
- * Onside — dark stadium / broadcast shell (hackathon-competitive).
- * Neon turf accent + gold caution. Team colors in the log still apply:
- * home = turf, away = whistle, neutral = muted.
+ * Onside — chalk & turf, Match Official.
+ * Chalk paper background, ink scoreboard, turf/whistle as team colors.
+ * Color in the decision log follows TEAM only (never execution state).
  */
 @theme {
-  --color-chalk: #0b0f0d; /* page background (stadium black) */
-  --color-chalk-2: #141a16; /* elevated cards / panels */
-  --color-ink: #f3f0e7; /* primary text (light on dark) */
-  --color-turf: #c8f542; /* neon accent — CTAs, home, live */
-  --color-caution: #e0b83a; /* gold — logo kinship, pending */
-  --color-whistle: #ff5c4a; /* away / red cards / alert */
-  --color-linesman: #8b9a90; /* muted secondary */
-  --color-hairline: #243028; /* borders */
-  --color-panel: #1a221d; /* deeper card fill */
-  --color-glow: #c8f54233;
+  --color-chalk: #f3f0e7; /* page background (report paper) */
+  --color-chalk-2: #ebe6d6; /* slightly deeper chalk for elevated wash */
+  --color-ink: #182620; /* primary text + scoreboard band */
+  --color-turf: #2f6b4e; /* home / CTAs / executed home stamps */
+  --color-caution: #d9a31b; /* yellow cards / pending */
+  --color-whistle: #b93a2b; /* away / red cards / live alert */
+  --color-linesman: #77877d; /* secondary / neutral / suggested-only */
+  --color-hairline: #d4d0c4; /* borders on chalk */
+  --color-panel: #fffcf5; /* panel fill above chalk */
+  --color-glow: #2f6b4e22;
 }
 
 @theme inline {
-  --font-sans: "Playfair Display", ui-serif, Georgia, serif;
-  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   font-family: var(--font-sans);
-  font-size: 1.0625rem; /* Playfair needs a touch more size than condensed sans */
+  font-size: 1rem;
   line-height: 1.55;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
   background: var(--color-chalk);
   color: var(--color-ink);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-turf) 12%, transparent), transparent),
-    radial-gradient(ellipse 40% 30% at 100% 0%, color-mix(in srgb, var(--color-caution) 8%, transparent), transparent);
+    radial-gradient(ellipse 70% 45% at 50% -15%, color-mix(in srgb, var(--color-turf) 8%, transparent), transparent),
+    radial-gradient(ellipse 35% 25% at 100% 0%, color-mix(in srgb, var(--color-caution) 6%, transparent), transparent);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -46,13 +46,15 @@ body {
 h1,
 h2,
 h3,
-h4 {
-  letter-spacing: -0.015em;
-  line-height: 1.2;
+h4,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+  line-height: 1.15;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-turf) 35%, transparent);
+  background: color-mix(in srgb, var(--color-turf) 28%, transparent);
 }
 
 @media (prefers-reduced-motion: no-preference) {

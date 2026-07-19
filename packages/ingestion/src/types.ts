@@ -11,6 +11,8 @@ export type MatchEvent = {
   scoreHome: number;
   scoreAway: number;
   timestamp: string; // ISO
+  /** TxLINE Seq when present — used for settlement Merkle validation. */
+  seq?: number;
 };
 
 export type MatchMeta = {
@@ -18,6 +20,10 @@ export type MatchMeta = {
   homeTeam: string;
   awayTeam: string;
   competition: string;
+  /** TxLINE fixture id when this replay was recorded from historical/live. */
+  fixtureId?: number;
+  /** Seq of the game_finalised scores record (preferred for validateStat). */
+  finalSeq?: number;
 };
 
 /**

@@ -11,8 +11,6 @@ import type { MatchEvent } from "./types.js";
 
 type RawRecord = Record<string, any>;
 
-const FINAL_PHASE_LETTERS = new Set(["F", "FET", "FPE"]);
-const FINAL_STATUS_IDS = new Set([5, 10, 13]); // F, FET, FPE
 const LIVE_PHASE_LETTERS = new Set(["H1", "H2", "ET1", "ET2", "PE"]);
 const LIVE_STATUS_IDS = new Set([2, 4, 7, 9, 12]); // H1, H2, ET1, ET2, PE
 
@@ -156,6 +154,7 @@ export class TxlineNormalizer {
 
   private base(raw: RawRecord, minute: number): Omit<MatchEvent, "type"> {
     const ts = pick(raw, "Ts", "ts");
+    const seq = pick(raw, "Seq", "seq");
     return {
       matchId: this.matchId,
       minute,
@@ -163,6 +162,7 @@ export class TxlineNormalizer {
       scoreAway: this.score.away,
       odds: this.lastOdds ?? undefined,
       timestamp: new Date(typeof ts === "number" ? ts : Date.now()).toISOString(),
+      ...(typeof seq === "number" && seq >= 1 ? { seq } : {}),
     };
   }
 
@@ -173,14 +173,11 @@ export class TxlineNormalizer {
   }
 
   private isFinalPhase(raw: RawRecord): boolean {
-    const letter = gameStateLetter(raw);
     const status = statusIdOf(raw);
     const action = actionOf(raw);
-    return (
-      action === "game_finalised" ||
-      FINAL_PHASE_LETTERS.has(letter) ||
-      (status !== undefined && FINAL_STATUS_IDS.has(status))
-    );
+    // TxLINE posts game_finalised (StatusId 100) after the classic F frame.
+    // Prefer that so preferredSeq matches validateStat / Step C smoke.
+    return action === "game_finalised" || status === 100;
   }
 
   /**

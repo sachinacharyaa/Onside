@@ -3,7 +3,7 @@ import type { DecisionAction } from "./stream-types";
 
 /**
  * Color in the decision log always follows TEAM, never action state:
- * home = turf, away = whistle, neutral (time-decay, match-wide) = ink.
+ * home = turf, away = whistle, neutral (time-decay, match-wide) = linesman.
  * Execution state is shown only through the stamp chip / dimming.
  */
 export type TeamSide = "home" | "away" | "neutral";
@@ -17,7 +17,7 @@ export function sideOfLine(line: NarrationLine): TeamSide {
     if (line.signal.suggestedAction === "OPEN_AWAY") return "away";
   }
   // Time-decay mismatches and match-wide events (full-time, settlement)
-  // are the official's own observations — neutral ink.
+  // are the official's own observations — neutral / linesman.
   return "neutral";
 }
 

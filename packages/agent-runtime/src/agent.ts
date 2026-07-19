@@ -48,7 +48,9 @@ function preferredSeqFromSource(source: MatchEventSource): number | undefined {
   const maybe = source as MatchEventSource & {
     normalizer?: { lastScoreSeq: number | null };
   };
-  const seq = maybe.normalizer?.lastScoreSeq;
+  // Prefer the recorded game_finalised seq (historical replays) over the last
+  // emitted event seq — fulltime can fire slightly before the finalised frame.
+  const seq = source.meta.finalSeq ?? maybe.normalizer?.lastScoreSeq;
   return typeof seq === "number" && seq >= 1 ? seq : undefined;
 }
 

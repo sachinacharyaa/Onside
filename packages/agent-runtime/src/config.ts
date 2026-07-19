@@ -6,6 +6,8 @@ import { rulesConfig } from "@onside/signal-engine";
 export type AgentConfig = {
   useReplayMode: boolean;
   replayIntervalMs: number;
+  /** Timestamp compression factor for historical replays (see REPLAY_SPEED). */
+  replaySpeed?: number;
   replayFile?: string;
   settleThreshold: number;
   solanaRpcUrl: string;
@@ -41,6 +43,7 @@ export function loadConfig(): AgentConfig {
   return {
     useReplayMode: (process.env.USE_REPLAY_MODE ?? "true").toLowerCase() !== "false",
     replayIntervalMs: Number(process.env.REPLAY_INTERVAL_MS ?? 1500),
+    replaySpeed: process.env.REPLAY_SPEED ? Number(process.env.REPLAY_SPEED) : undefined,
     replayFile: process.env.REPLAY_FILE || undefined,
     settleThreshold: Number(
       process.env.CONFIDENCE_SETTLE_THRESHOLD ?? rulesConfig.decision.settleThreshold,
