@@ -125,7 +125,7 @@ export function MatchCrest({
         y="42"
         textAnchor="middle"
         fill={color}
-        fontFamily="Barlow Condensed, sans-serif"
+        fontFamily="Playfair Display, Georgia, serif"
         fontWeight="700"
         fontSize="14"
         letterSpacing="1"
@@ -137,7 +137,7 @@ export function MatchCrest({
         y="58"
         textAnchor="middle"
         fill="var(--color-linesman)"
-        fontFamily="Barlow Condensed, sans-serif"
+        fontFamily="Playfair Display, Georgia, serif"
         fontWeight="600"
         fontSize="10"
       >
@@ -148,7 +148,7 @@ export function MatchCrest({
         y="74"
         textAnchor="middle"
         fill="var(--color-ink)"
-        fontFamily="Barlow Condensed, sans-serif"
+        fontFamily="Playfair Display, Georgia, serif"
         fontWeight="700"
         fontSize="14"
         letterSpacing="1"

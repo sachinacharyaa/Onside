@@ -37,12 +37,10 @@ export function FullTimeReport({
       }`}
     >
       <div className="flex items-start justify-between gap-3">
-        <h2 className="font-display text-lg font-semibold uppercase tracking-wide">
-          Full-time report
-        </h2>
+        <h2 className="font-display text-xl font-semibold tracking-tight">Full-time report</h2>
         {status === "settled" && (
           <span
-            className="-rotate-3 rounded-sm border-2 border-turf px-2 py-0.5 font-display text-sm font-bold uppercase tracking-[0.15em] text-turf"
+            className="-rotate-3 rounded-sm border-2 border-turf px-2 py-0.5 text-sm font-semibold text-turf"
             aria-hidden="true"
           >
             Settled
@@ -52,8 +50,8 @@ export function FullTimeReport({
 
       {status === "pending" && (
         <p className="mt-2 text-sm leading-relaxed text-linesman">
-          In play — the agent settles its own market at the final whistle. No one else signs
-          this report.
+          In play. The agent settles its own market at the final whistle. No one else signs this
+          report.
         </p>
       )}
 
@@ -76,7 +74,7 @@ export function FullTimeReport({
           {proof.explorerUrl ? (
             <p>
               <a
-                to={proof.explorerUrl}
+                href={proof.explorerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-turf underline decoration-turf/50 underline-offset-4 hover:decoration-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
@@ -86,7 +84,7 @@ export function FullTimeReport({
             </p>
           ) : (
             <p className="text-linesman">
-              Simulated settlement — add a funded devnet wallet to file this on-chain.
+              Simulated settlement. Add a funded devnet wallet to file this on-chain.
             </p>
           )}
           <p className="break-all font-mono text-xs text-linesman">tx {proof.txSignature}</p>

@@ -36,13 +36,11 @@ export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: Matc
       className="rounded-2xl border border-hairline bg-panel/80 p-4"
     >
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-display text-lg font-semibold uppercase tracking-wide">
-          Market pulse
-        </h2>
+        <h2 className="font-display text-xl font-semibold tracking-tight">Market pulse</h2>
         <p className="flex gap-3 text-xs text-linesman">
-          <span className="text-turf">— {meta.homeTeam}</span>
-          <span>–– draw</span>
-          <span className="text-whistle">— {meta.awayTeam}</span>
+          <span className="text-turf">{meta.homeTeam}</span>
+          <span>draw</span>
+          <span className="text-whistle">{meta.awayTeam}</span>
         </p>
       </div>
       <p className="mb-2 text-xs text-linesman">

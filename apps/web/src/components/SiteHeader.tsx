@@ -27,7 +27,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 to={item.href}
-                className={`rounded-full px-3.5 py-2 font-display text-sm font-semibold uppercase tracking-wider transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf ${
+                className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf ${
                   active ? "bg-turf/15 text-turf" : "text-linesman hover:text-ink"
                 }`}
               >
@@ -50,7 +50,7 @@ export function SiteHeader() {
           <Link
             key={item.href}
             to={item.href}
-            className={`whitespace-nowrap rounded-full px-3 py-2 font-display text-xs font-semibold uppercase tracking-wider ${
+            className={`whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium ${
               pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
                 ? "bg-turf/15 text-turf"
                 : "text-linesman"

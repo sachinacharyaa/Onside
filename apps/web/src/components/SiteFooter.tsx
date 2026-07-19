@@ -9,14 +9,20 @@ export function SiteFooter() {
           <Logo tone="chalk" />
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-linesman">
             Glass-box settling agent for live World Cup markets. Explicit rules. Plain-language
-            calls. On-chain proof — not a black-box trader.
+            calls. On-chain proof, not a black-box trader.
           </p>
         </div>
-        <div className="flex flex-wrap gap-x-8 gap-y-2 font-display text-sm font-semibold uppercase tracking-wider">
-          <Link to="/live" className="text-linesman hover:text-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf">
+        <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm font-medium">
+          <Link
+            to="/live"
+            className="text-linesman hover:text-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+          >
             Live
           </Link>
-          <Link to="/rulebook" className="text-linesman hover:text-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf">
+          <Link
+            to="/rulebook"
+            className="text-linesman hover:text-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+          >
             Rulebook
           </Link>
           <a
@@ -30,7 +36,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-hairline px-5 py-3 text-center text-xs text-linesman sm:px-8">
-        Track 3 · Trading Tools and Agents · Solana · TxLINE
+        Track 3, Trading Tools and Agents, Solana, TxLINE
       </div>
     </footer>
   );

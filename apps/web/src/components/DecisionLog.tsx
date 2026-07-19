@@ -45,19 +45,17 @@ export function DecisionLog({
       className="flex h-full flex-col rounded-2xl border border-hairline bg-panel/80 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
     >
       <header className="border-b border-hairline px-5 py-4 sm:px-6">
-        <h2 className="font-display text-2xl font-semibold uppercase tracking-wide">
-          Decision log
-        </h2>
-        <p className="mt-0.5 text-sm text-linesman">
+        <h2 className="font-display text-2xl font-semibold tracking-tight">Decision log</h2>
+        <p className="mt-1 text-sm leading-relaxed text-linesman">
           Every entry traces to a named rule and a real match event.
         </p>
       </header>
 
       <ol className="flex-1 space-y-0 overflow-y-auto px-2 py-2 sm:px-3" aria-live="polite">
         {newestFirst.length === 0 && (
-          <li className="px-4 py-10 text-center text-linesman">
-            Waiting for kickoff. The agent writes every call it makes — and every one it
-            declines — into this log.
+          <li className="px-4 py-10 text-center text-sm leading-relaxed text-linesman sm:text-base">
+            Waiting for kickoff. The agent writes every call it makes, and every one it declines,
+            into this log.
           </li>
         )}
 
@@ -77,10 +75,10 @@ export function DecisionLog({
               }`}
             >
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="font-display text-xl font-bold tabular-nums">
+                <span className="font-display text-xl font-semibold tabular-nums">
                   {event.minute}&rsquo;
                 </span>
-                <span className="font-display text-[13px] font-semibold uppercase tracking-wider">
+                <span className="text-sm font-medium tracking-wide">
                   {RULE_LABEL[line.signal.rule] ?? line.signal.rule}
                 </span>
                 {isCardEvent && <CardChip colour={event.card!} />}
@@ -91,7 +89,7 @@ export function DecisionLog({
 
               <p
                 className={`mt-1 leading-relaxed ${
-                  executed ? "text-[17px] text-ink" : "text-[15px] text-linesman"
+                  executed ? "text-base text-ink sm:text-[17px]" : "text-sm text-linesman sm:text-[15px]"
                 }`}
               >
                 {line.text}
@@ -103,12 +101,12 @@ export function DecisionLog({
                     <ExecutedStamp label={executedLabel(line)} />
                   </span>
                 ) : action === "held" ? (
-                  <span className="text-[13px] italic text-linesman">
-                    Cleared the bar — rule advises holding, so no trade.
+                  <span className="text-sm italic text-linesman">
+                    Cleared the bar. Rule advises holding, so no trade.
                   </span>
                 ) : action === "below_threshold" ? (
-                  <span className="text-[13px] italic text-linesman">
-                    Noted — didn&rsquo;t clear the {settleThreshold}% bar. No action taken.
+                  <span className="text-sm italic text-linesman">
+                    Noted. Didn&rsquo;t clear the {settleThreshold}% bar. No action taken.
                   </span>
                 ) : null}
               </div>

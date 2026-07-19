@@ -32,16 +32,16 @@ export function MatchPoster({ match }: { match: FeaturedMatch }) {
         <div className="flex flex-col">
           <div className="flex flex-wrap items-center gap-3">
             <span
-              className={`rounded-full border border-current/30 bg-chalk/40 px-3 py-1 font-display text-[11px] font-bold uppercase tracking-[0.18em] ${ACCENT_TEXT[match.accent]}`}
+              className={`rounded-full border border-current/30 bg-chalk/40 px-3 py-1 text-sm font-medium ${ACCENT_TEXT[match.accent]}`}
             >
               {match.tag}
             </span>
-            <span className="font-display text-xs font-semibold uppercase tracking-wider text-linesman">
+            <span className="text-sm font-medium tracking-wide text-linesman">
               {match.competition}
             </span>
           </div>
 
-          <h2 className="mt-5 font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl">
+          <h2 className="mt-5 font-display text-4xl font-semibold leading-snug tracking-tight sm:text-5xl lg:text-6xl">
             <span className="text-ink">{match.home}</span>
             <span className="mx-3 text-linesman">vs</span>
             <span className="block text-ink sm:inline">{match.away}</span>
@@ -54,13 +54,13 @@ export function MatchPoster({ match }: { match: FeaturedMatch }) {
           <div className="mt-auto flex flex-wrap gap-3 pt-8">
             <Link
               to={`/live?match=${match.id}`}
-              className="inline-flex min-h-12 items-center rounded-full bg-turf px-6 py-3 font-display text-sm font-bold uppercase tracking-wider text-chalk transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+              className="inline-flex min-h-12 items-center rounded-full bg-turf px-6 py-3 text-sm font-semibold text-chalk transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
             >
               Watch agent →
             </Link>
             <Link
               to="/rulebook"
-              className="inline-flex min-h-12 items-center rounded-full border border-hairline bg-chalk/40 px-6 py-3 font-display text-sm font-bold uppercase tracking-wider text-ink transition-colors hover:border-turf/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+              className="inline-flex min-h-12 items-center rounded-full border border-hairline bg-chalk/40 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-turf/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
             >
               View rulebook
             </Link>
@@ -70,8 +70,8 @@ export function MatchPoster({ match }: { match: FeaturedMatch }) {
         {/* Odds lean panel */}
         <div className="flex flex-col justify-between rounded-xl border border-hairline bg-chalk/60 p-5 backdrop-blur-sm">
           <div>
-            <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-linesman">
-              Implied lean · kickoff
+            <p className="text-sm font-medium tracking-wide text-linesman">
+              Implied lean at kickoff
             </p>
             <div className="mt-4 space-y-4">
               <LeanBar label={match.home} pct={match.homeLean} color="bg-turf" />
@@ -94,7 +94,7 @@ export function MatchPoster({ match }: { match: FeaturedMatch }) {
 function LeanBar({ label, pct, color }: { label: string; pct: number; color: string }) {
   return (
     <div>
-      <div className="mb-1.5 flex justify-between font-display text-sm font-semibold uppercase tracking-wide">
+      <div className="mb-1.5 flex justify-between text-sm font-medium tracking-wide">
         <span>{label}</span>
         <span className="text-linesman">{pct}%</span>
       </div>
@@ -108,8 +108,8 @@ function LeanBar({ label, pct, color }: { label: string; pct: number; color: str
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-hairline bg-panel px-3 py-2">
-      <p className="text-[10px] uppercase tracking-wider text-linesman">{label}</p>
-      <p className="font-display text-sm font-bold uppercase tracking-wide text-ink">{value}</p>
+      <p className="text-xs font-medium tracking-wide text-linesman">{label}</p>
+      <p className="font-display text-sm font-semibold tracking-tight text-ink">{value}</p>
     </div>
   );
 }
@@ -121,16 +121,16 @@ export function MatchCard({ match }: { match: FeaturedMatch }) {
       to={`/live?match=${match.id}`}
       className="group flex flex-col rounded-2xl border border-hairline bg-panel p-5 transition-colors hover:border-turf/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
     >
-      <span className={`font-display text-[11px] font-bold uppercase tracking-[0.16em] ${ACCENT_TEXT[match.accent]}`}>
+      <span className={`text-sm font-medium tracking-wide ${ACCENT_TEXT[match.accent]}`}>
         {match.tag}
       </span>
-      <h3 className="mt-3 font-display text-2xl font-bold uppercase leading-none tracking-tight">
+      <h3 className="mt-3 font-display text-2xl font-semibold leading-snug tracking-tight">
         {match.home}
         <span className="mx-2 text-linesman">vs</span>
         {match.away}
       </h3>
-      <p className="mt-2 line-clamp-2 text-sm text-linesman">{match.blurb}</p>
-      <span className="mt-4 font-display text-xs font-bold uppercase tracking-wider text-turf group-hover:underline">
+      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-linesman">{match.blurb}</p>
+      <span className="mt-4 text-sm font-semibold text-turf group-hover:underline">
         Open live stage →
       </span>
     </Link>

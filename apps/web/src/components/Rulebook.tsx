@@ -15,7 +15,7 @@ export function Rulebook({ settleThreshold }: { settleThreshold: number }) {
     {
       name: "Score change",
       trigger: "Fires on goals, red cards, and the final whistle.",
-      formula: `goal ${rulesConfig.SCORE_CHANGE.goalConfidence} · red card ${rulesConfig.SCORE_CHANGE.redCardConfidence} · full-time 100`,
+      formula: `goal ${rulesConfig.SCORE_CHANGE.goalConfidence}, red card ${rulesConfig.SCORE_CHANGE.redCardConfidence}, full-time 100`,
     },
     {
       name: "Decay mismatch",
@@ -30,14 +30,12 @@ export function Rulebook({ settleThreshold }: { settleThreshold: number }) {
       className="rounded-2xl border border-hairline bg-panel/80 p-4 sm:p-5"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-display text-lg font-semibold uppercase tracking-wide">
-          The rulebook
-        </h2>
-        <p className="font-display text-[13px] font-semibold uppercase tracking-wider text-turf">
+        <h2 className="font-display text-xl font-semibold tracking-tight">The rulebook</h2>
+        <p className="text-sm font-medium text-turf">
           Acts only above {settleThreshold}% confidence
         </p>
       </div>
-      <p className="mt-1 text-sm text-linesman">
+      <p className="mt-2 text-sm leading-relaxed text-linesman">
         Every threshold the agent uses, read live from{" "}
         <code className="font-mono text-[13px] text-ink">rules.config.ts</code>. Nothing else
         decides.
@@ -46,10 +44,8 @@ export function Rulebook({ settleThreshold }: { settleThreshold: number }) {
       <ul className="mt-4 space-y-4">
         {rules.map((rule) => (
           <li key={rule.name} className="border-t border-hairline pt-3">
-            <h3 className="font-display text-base font-semibold uppercase tracking-wide">
-              {rule.name}
-            </h3>
-            <p className="mt-0.5 text-sm leading-relaxed">{rule.trigger}</p>
+            <h3 className="font-display text-lg font-semibold tracking-tight">{rule.name}</h3>
+            <p className="mt-1 text-sm leading-relaxed">{rule.trigger}</p>
             <p className="mt-1 font-mono text-[13px] text-linesman">
               confidence = {rule.formula}
             </p>
@@ -57,9 +53,9 @@ export function Rulebook({ settleThreshold }: { settleThreshold: number }) {
         ))}
       </ul>
 
-      <p className="mt-4 border-t border-hairline pt-3 text-xs leading-relaxed text-linesman">
-        Deterministic rules, template narration. No machine learning, no language model,
-        anywhere in the decision path.
+      <p className="mt-4 border-t border-hairline pt-3 text-sm leading-relaxed text-linesman">
+        Deterministic rules, template narration. No machine learning, no language model, anywhere
+        in the decision path.
       </p>
     </section>
   );

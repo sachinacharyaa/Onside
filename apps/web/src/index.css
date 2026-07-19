@@ -19,8 +19,8 @@
 }
 
 @theme inline {
-  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Barlow Condensed", "Archivo", sans-serif;
+  --font-sans: "Playfair Display", ui-serif, Georgia, serif;
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
@@ -29,12 +29,26 @@ html {
 }
 
 body {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem; /* Playfair needs a touch more size than condensed sans */
+  line-height: 1.55;
+  letter-spacing: 0.01em;
   background: var(--color-chalk);
   color: var(--color-ink);
   background-image:
     radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-turf) 12%, transparent), transparent),
     radial-gradient(ellipse 40% 30% at 100% 0%, color-mix(in srgb, var(--color-caution) 8%, transparent), transparent);
   background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.015em;
+  line-height: 1.2;
 }
 
 ::selection {

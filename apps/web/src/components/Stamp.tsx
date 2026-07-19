@@ -37,8 +37,8 @@ export function ExecutedStamp({ label }: { label: string }) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-sm border border-current px-2 py-0.5">
       <SealIcon className="h-4 w-4 shrink-0" />
-      <span className="font-display text-[13px] font-semibold uppercase tracking-wider">
-        Executed · {label}
+      <span className="text-sm font-medium tracking-wide">
+        Executed, {label}
       </span>
     </span>
   );

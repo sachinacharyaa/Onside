@@ -97,18 +97,16 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
       <div className="border-b border-hairline bg-chalk">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-3 px-5 py-3 sm:px-8">
           <div className="min-w-0 flex-1">
-            <p className="font-display text-xs font-semibold uppercase tracking-[0.18em] text-linesman">
-              Live stage · {mode === "replay" ? "replay" : "TxLINE live"}
+            <p className="text-sm font-medium tracking-wide text-linesman">
+              Live stage, {mode === "replay" ? "replay" : "TxLINE live"}
             </p>
-            <p className="truncate text-sm text-ink">
-              Watch every call as the agent writes it — stamp = acted, dim = noted only.
+            <p className="truncate text-sm text-ink sm:text-base">
+              Watch every call as the agent writes it. Stamp means acted, dim means noted only.
             </p>
           </div>
 
           <label className="flex items-center gap-2 text-sm">
-            <span className="font-display text-[12px] font-semibold uppercase tracking-wider text-linesman">
-              Match
-            </span>
+            <span className="text-sm font-medium tracking-wide text-linesman">Match</span>
             <select
               value={matchId}
               onChange={(e) => {
@@ -128,7 +126,7 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
           <button
             type="button"
             onClick={() => setRunId((n) => n + 1)}
-            className="min-h-10 rounded-full bg-turf px-4 py-1.5 font-display text-sm font-semibold uppercase tracking-wider text-chalk transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+            className="min-h-10 rounded-full bg-turf px-4 py-1.5 text-sm font-semibold text-chalk transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
           >
             Replay
           </button>
@@ -157,7 +155,7 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
             >
               rulebook
             </Link>
-            — the agent acts only above {settleThreshold}% confidence.
+            . The agent acts only above {settleThreshold}% confidence.
           </p>
         </aside>
       </div>

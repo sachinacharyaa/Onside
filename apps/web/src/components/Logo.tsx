@@ -39,10 +39,10 @@ export function Logo({
       >
         <LogoMark className="h-20 w-20 sm:h-24 sm:w-24" />
         <span className="flex flex-col">
-          <span className="font-display text-5xl font-bold uppercase leading-none tracking-tight sm:text-7xl">
+          <span className="font-display text-5xl font-semibold leading-none tracking-tight sm:text-6xl">
             Onside
           </span>
-          <span className="mt-1 font-display text-sm font-semibold uppercase tracking-[0.22em] text-linesman sm:text-base">
+          <span className="mt-2 text-sm font-medium tracking-wide text-linesman sm:text-base">
             Match official for markets
           </span>
         </span>
@@ -57,8 +57,8 @@ export function Logo({
     >
       <LogoMark className="h-9 w-9" />
       <span className="flex flex-col leading-none">
-        <span className="font-display text-lg font-bold uppercase tracking-wide">Onside</span>
-        <span className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-linesman">
+        <span className="font-display text-lg font-semibold tracking-tight">Onside</span>
+        <span className="mt-1 text-xs font-medium tracking-wide text-linesman">
           Settling agent
         </span>
       </span>

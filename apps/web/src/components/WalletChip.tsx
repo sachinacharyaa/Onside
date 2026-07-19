@@ -77,16 +77,14 @@ export function WalletChip() {
     <div className="flex flex-wrap items-center gap-2">
       {agent?.connected && agent.short && (
         <a
-          to={`https://explorer.solana.com/address/${agent.address}?cluster=devnet`}
+          href={`https://explorer.solana.com/address/${agent.address}?cluster=devnet`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex min-h-10 items-center gap-2 rounded-full border border-hairline bg-panel px-3 py-1.5 text-xs transition-colors hover:border-turf/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
           title="Agent settler wallet on Solana Explorer"
         >
           <span className="h-2 w-2 rounded-full bg-turf shadow-[0_0_8px_var(--color-turf)]" aria-hidden />
-          <span className="font-display font-semibold uppercase tracking-wider text-linesman">
-            Agent
-          </span>
+          <span className="font-medium tracking-wide text-linesman">Agent</span>
           <span className="font-mono text-ink">{agent.short}</span>
         </a>
       )}
@@ -105,7 +103,7 @@ export function WalletChip() {
           type="button"
           disabled={busy}
           onClick={() => void connectViewer()}
-          className="inline-flex min-h-10 items-center gap-2 rounded-full bg-turf px-4 py-1.5 font-display text-xs font-bold uppercase tracking-wider text-chalk transition-opacity hover:opacity-90 disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+          className="inline-flex min-h-10 items-center gap-2 rounded-full bg-turf px-4 py-1.5 text-sm font-semibold text-chalk transition-opacity hover:opacity-90 disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
         >
           {busy ? "Connecting…" : "Connect wallet"}
         </button>
