@@ -9,7 +9,7 @@ export function LogoMark({
 }) {
   return (
     <span
-      className={`relative inline-flex shrink-0 overflow-hidden rounded-[18%] ring-1 ring-turf/25 ${className}`}
+      className={`relative inline-flex shrink-0 overflow-hidden rounded-[18%] shadow-[0_0_24px_var(--color-glow)] ring-1 ring-turf/20 ${className}`}
     >
       <img
         src="/brand/onside-mark.png"

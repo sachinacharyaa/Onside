@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 export function LivePage() {
   const [params] = useSearchParams();
-  const matchId = params.get("match") ?? "fra-eng-3rd";
+  const matchId = params.get("match") ?? "txline-18257865";
 
   return (
     <div className="flex min-h-screen flex-col">

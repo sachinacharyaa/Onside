@@ -9,16 +9,17 @@ import {
   IconWhistleCall,
   MatchCrest,
 } from "@/components/LandingIcons";
+import { NextFixtureCard } from "@/components/NextFixtureCard";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { FEATURED } from "@/lib/matches";
+import { FEATURED, NEXT_FIXTURE, formatCardDate } from "@/lib/matches";
 
 /**
  * One continuous landing composition — no section borders.
  * Tall, visual, icon-led; flows as a single page.
  */
 export function HomePage() {
-  const [hero, ...rest] = FEATURED;
+  const [hero] = FEATURED;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -74,33 +75,53 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Featured match — typographic crest only (no stock photography) */}
+            {/* Featured match — real match photo background */}
             <Link
               to={`/live?match=${hero.id}`}
-              className="hero-rise-delay group relative block min-h-[22rem] overflow-hidden rounded-3xl bg-panel shadow-[0_16px_48px_rgba(24,38,32,0.12)] ring-1 ring-hairline transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turf sm:min-h-[26rem]"
+              className="hero-rise-delay group relative block min-h-[22rem] overflow-hidden rounded-3xl shadow-[0_24px_80px_rgba(0,0,0,0.45)] ring-1 ring-white/10 transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turf sm:min-h-[26rem]"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-turf/15 via-panel to-chalk-2" />
-              <div className="relative flex h-full min-h-[22rem] flex-col justify-between p-8 sm:min-h-[26rem]">
+              <img
+                src={hero.poster}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/25 to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-black/95 via-black/65 to-transparent"
+                aria-hidden
+              />
+
+              <div className="relative flex h-full min-h-[22rem] flex-col justify-between p-6 sm:min-h-[26rem] sm:p-8">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-medium tracking-wide text-turf">{hero.tag}</p>
-                    <p className="mt-1 text-sm text-linesman">{hero.competition}</p>
+                    <p className="text-sm font-medium tracking-wide text-turf drop-shadow">
+                      {hero.tag}
+                    </p>
+                    <p className="mt-1 text-sm text-white/75 drop-shadow">
+                      {formatCardDate(hero.kickoffIso)} · {hero.competition}
+                    </p>
+                    <p className="mt-1 font-display text-lg font-semibold text-white/90 drop-shadow">
+                      FT {hero.finalScore}
+                    </p>
                   </div>
                   <MatchCrest
                     home={hero.home}
                     away={hero.away}
                     accent={hero.accent}
-                    className="h-24 w-24"
+                    className="h-20 w-20 drop-shadow-lg"
                   />
                 </div>
 
                 <div>
-                  <h2 className="font-display text-3xl font-semibold leading-snug tracking-tight text-ink sm:text-4xl">
+                  <h2 className="font-display text-3xl font-semibold leading-snug tracking-tight text-white drop-shadow sm:text-4xl">
                     {hero.home}
-                    <span className="mx-2 text-linesman">vs</span>
+                    <span className="mx-2 text-white/50">vs</span>
                     <span className="block sm:inline">{hero.away}</span>
                   </h2>
-                  <p className="mt-4 max-w-md text-sm leading-relaxed text-linesman sm:text-base">
+                  <p className="mt-4 max-w-md text-sm leading-relaxed text-white/90 drop-shadow sm:text-base">
                     {hero.blurb}
                   </p>
                   <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
@@ -108,10 +129,11 @@ export function HomePage() {
                       <LeanDot label={hero.home} pct={hero.homeLean} tone="turf" />
                       <LeanDot label={hero.away} pct={hero.awayLean} tone="whistle" />
                     </div>
-                    <span className="text-sm font-semibold text-turf group-hover:underline">
+                    <span className="text-sm font-semibold text-turf drop-shadow group-hover:underline">
                       Enter live stage →
                     </span>
                   </div>
+                  <p className="mt-3 text-[11px] text-white/45">{hero.posterCredit}</p>
                 </div>
               </div>
             </Link>
@@ -148,14 +170,29 @@ export function HomePage() {
             </ol>
           </div>
 
-          {/* Match picker */}
+          {/* Next real fixture — not a replay */}
+          <div className="mt-20 sm:mt-28">
+            <p className="text-sm font-medium tracking-wide text-caution">Coming up</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold leading-snug tracking-tight">
+              Next fixture on TxLINE
+            </h2>
+            <div className="mt-8">
+              <NextFixtureCard fixture={NEXT_FIXTURE} />
+            </div>
+          </div>
+
+          {/* Match picker — recorded finished fixtures only */}
           <div className="mt-20 sm:mt-28">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="text-sm font-medium tracking-wide text-linesman">Choose a replay</p>
                 <h2 className="mt-2 font-display text-3xl font-semibold leading-snug tracking-tight">
-                  Three World Cup scripts
+                  Three finished World Cup matches
                 </h2>
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-linesman">
+                  Real TxLINE historical feeds, most recent first. Each settles with Merkle
+                  validation on the fixture&apos;s final seq.
+                </p>
               </div>
               <IconBall className="h-12 w-12 text-turf/40" />
             </div>
@@ -165,17 +202,28 @@ export function HomePage() {
                 <li key={m.id}>
                   <Link
                     to={`/live?match=${m.id}`}
-                    className="group relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-3xl bg-panel shadow-[0_8px_28px_rgba(24,38,32,0.08)] ring-1 ring-hairline transition-all hover:ring-turf/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+                    className="group relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-3xl transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
                   >
+                    <img
+                      src={m.poster}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div
+                      className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/20 to-transparent"
+                      aria-hidden
+                    />
+                    <div
+                      className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-black/95 via-black/70 to-transparent"
+                      aria-hidden
+                    />
+
                     <div className="relative flex h-full flex-col p-6">
-                      <MatchCrest
-                        home={m.home}
-                        away={m.away}
-                        accent={m.accent}
-                        className="h-28 w-28 self-center"
-                      />
+                      <p className="text-sm font-medium tracking-wide text-white/80 drop-shadow">
+                        {formatCardDate(m.kickoffIso)}
+                      </p>
                       <p
-                        className={`mt-auto text-center text-sm font-medium tracking-wide ${
+                        className={`mt-1 text-sm font-medium tracking-wide drop-shadow ${
                           m.accent === "whistle"
                             ? "text-whistle"
                             : m.accent === "caution"
@@ -183,17 +231,20 @@ export function HomePage() {
                               : "text-turf"
                         }`}
                       >
-                        {m.tag}
+                        {m.competition}
                       </p>
-                      <h3 className="mt-2 text-center font-display text-2xl font-semibold leading-snug tracking-tight">
+                      <h3 className="mt-auto font-display text-2xl font-semibold leading-snug tracking-tight text-white drop-shadow">
                         {m.home}
-                        <span className="mx-1.5 text-linesman">vs</span>
+                        <span className="mx-1.5 text-white/50">vs</span>
                         {m.away}
                       </h3>
-                      <p className="mt-3 flex-1 text-center text-sm leading-relaxed text-linesman">
+                      <p className="mt-2 font-display text-lg font-semibold text-caution drop-shadow">
+                        FT {m.finalScore}
+                      </p>
+                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/85 drop-shadow">
                         {m.blurb}
                       </p>
-                      <span className="mt-5 text-center text-sm font-semibold text-turf group-hover:underline">
+                      <span className="mt-5 text-sm font-semibold text-turf drop-shadow group-hover:underline">
                         Open live stage →
                       </span>
                     </div>
@@ -216,7 +267,7 @@ export function HomePage() {
               </blockquote>
             </div>
             <Link
-              to={`/live?match=${rest[0]?.id ?? hero.id}`}
+              to={`/live?match=${hero.id}`}
               className="inline-flex min-h-12 shrink-0 items-center gap-2 rounded-full bg-turf px-7 py-3 text-sm font-semibold text-chalk hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
             >
               <IconWhistleCall className="h-5 w-5" />

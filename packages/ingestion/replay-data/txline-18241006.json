@@ -1,0 +1,692 @@
+{
+  "meta": {
+    "matchId": "txline-18241006",
+    "fixtureId": 18241006,
+    "homeTeam": "England",
+    "awayTeam": "Argentina",
+    "competition": "FIFA World Cup 2026 — Semi-final",
+    "finalSeq": 962,
+    "kickoffMs": 1784142000000,
+    "finalScore": "1-2"
+  },
+  "events": [
+    {
+      "matchId": "txline-18241006",
+      "minute": 0,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 2.79,
+        "draw": 3.05,
+        "away": 3.18
+      },
+      "timestamp": "2026-07-15T18:45:45.401Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 0,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 2.88,
+        "draw": 2.98,
+        "away": 3.15
+      },
+      "timestamp": "2026-07-15T19:00:20.222Z",
+      "seq": 14,
+      "type": "kickoff"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 4,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 2.76,
+        "draw": 2.91,
+        "away": 3.4
+      },
+      "timestamp": "2026-07-15T19:04:36.198Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 10,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 2.76,
+        "draw": 2.82,
+        "away": 3.54
+      },
+      "timestamp": "2026-07-15T19:10:38.430Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 31,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 2.82,
+        "draw": 2.65,
+        "away": 3.72
+      },
+      "timestamp": "2026-07-15T19:31:58.011Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 36,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 2.85,
+        "draw": 2.6,
+        "away": 3.79
+      },
+      "timestamp": "2026-07-15T19:36:34.922Z",
+      "seq": 303,
+      "type": "card",
+      "team": "home",
+      "card": "yellow"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 41,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 3.02,
+        "draw": 2.51,
+        "away": 3.69
+      },
+      "timestamp": "2026-07-15T19:41:02.525Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 41,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 3.06,
+        "draw": 2.46,
+        "away": 3.74
+      },
+      "timestamp": "2026-07-15T19:41:33.887Z",
+      "seq": 342,
+      "type": "card",
+      "team": "away",
+      "card": "yellow"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 47,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 3.11,
+        "draw": 2.37,
+        "away": 3.9
+      },
+      "timestamp": "2026-07-15T19:47:03.623Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 60,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 3.06,
+        "draw": 2.33,
+        "away": 4.12
+      },
+      "timestamp": "2026-07-15T20:00:09.113Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 69,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 3.28,
+        "draw": 2.29,
+        "away": 3.87
+      },
+      "timestamp": "2026-07-15T20:09:26.012Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 50,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 3.33,
+        "draw": 2.23,
+        "away": 3.97
+      },
+      "timestamp": "2026-07-15T20:11:54.598Z",
+      "seq": 501,
+      "type": "card",
+      "team": "away",
+      "card": "yellow"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 75,
+      "scoreHome": 0,
+      "scoreAway": 0,
+      "odds": {
+        "home": 3.5,
+        "draw": 2.15,
+        "away": 4
+      },
+      "timestamp": "2026-07-15T20:15:26.102Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 54,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.46,
+        "draw": 4.12,
+        "away": 13.6
+      },
+      "timestamp": "2026-07-15T20:17:06.116Z",
+      "seq": 540,
+      "type": "goal",
+      "team": "home"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 78,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.51,
+        "draw": 3.95,
+        "away": 11.6
+      },
+      "timestamp": "2026-07-15T20:18:28.247Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 81,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.58,
+        "draw": 3.69,
+        "away": 10.6
+      },
+      "timestamp": "2026-07-15T20:21:28.478Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 63,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.58,
+        "draw": 3.63,
+        "away": 10.8
+      },
+      "timestamp": "2026-07-15T20:24:55.328Z",
+      "seq": 629,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 63,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.58,
+        "draw": 3.64,
+        "away": 10.6
+      },
+      "timestamp": "2026-07-15T20:25:03.296Z",
+      "seq": 630,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 87,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.55,
+        "draw": 3.75,
+        "away": 11.1
+      },
+      "timestamp": "2026-07-15T20:27:32.067Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 90,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.53,
+        "draw": 3.78,
+        "away": 12.1
+      },
+      "timestamp": "2026-07-15T20:30:32.334Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 71,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.51,
+        "draw": 3.87,
+        "away": 12.8
+      },
+      "timestamp": "2026-07-15T20:32:34.628Z",
+      "seq": 681,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 71,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.51,
+        "draw": 3.91,
+        "away": 12.6
+      },
+      "timestamp": "2026-07-15T20:32:42.958Z",
+      "seq": 682,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 71,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.51,
+        "draw": 3.88,
+        "away": 12.5
+      },
+      "timestamp": "2026-07-15T20:32:52.085Z",
+      "seq": 683,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 72,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.52,
+        "draw": 3.85,
+        "away": 12.1
+      },
+      "timestamp": "2026-07-15T20:33:22.550Z",
+      "seq": 684,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 72,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.52,
+        "draw": 3.85,
+        "away": 12.1
+      },
+      "timestamp": "2026-07-15T20:33:22.617Z",
+      "seq": 685,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 72,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.52,
+        "draw": 3.85,
+        "away": 12.2
+      },
+      "timestamp": "2026-07-15T20:33:25.485Z",
+      "seq": 686,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 72,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.52,
+        "draw": 3.85,
+        "away": 12.2
+      },
+      "timestamp": "2026-07-15T20:33:26.119Z",
+      "seq": 687,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 96,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.51,
+        "draw": 3.86,
+        "away": 12.6
+      },
+      "timestamp": "2026-07-15T20:36:35.427Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 80,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.51,
+        "draw": 3.81,
+        "away": 13
+      },
+      "timestamp": "2026-07-15T20:41:29.036Z",
+      "seq": 788,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 80,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.51,
+        "draw": 3.8,
+        "away": 13.2
+      },
+      "timestamp": "2026-07-15T20:41:43.500Z",
+      "seq": 789,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 102,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.48,
+        "draw": 3.91,
+        "away": 14.9
+      },
+      "timestamp": "2026-07-15T20:42:37.830Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 81,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.48,
+        "draw": 3.9,
+        "away": 14.3
+      },
+      "timestamp": "2026-07-15T20:42:47.878Z",
+      "seq": 794,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 81,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.48,
+        "draw": 3.9,
+        "away": 14.7
+      },
+      "timestamp": "2026-07-15T20:42:59.201Z",
+      "seq": 796,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 81,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.48,
+        "draw": 3.9,
+        "away": 14.7
+      },
+      "timestamp": "2026-07-15T20:42:59.284Z",
+      "seq": 797,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 105,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.44,
+        "draw": 4.07,
+        "away": 16.9
+      },
+      "timestamp": "2026-07-15T20:45:39.467Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 84,
+      "scoreHome": 1,
+      "scoreAway": 1,
+      "odds": {
+        "home": 1.44,
+        "draw": 4.04,
+        "away": 17
+      },
+      "timestamp": "2026-07-15T20:46:03.119Z",
+      "seq": 828,
+      "type": "goal",
+      "team": "away"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 85,
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "odds": {
+        "home": 1.44,
+        "draw": 4.04,
+        "away": 17
+      },
+      "timestamp": "2026-07-15T20:46:54.824Z",
+      "seq": 829,
+      "type": "goal",
+      "team": "away"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 84,
+      "scoreHome": 1,
+      "scoreAway": 1,
+      "odds": {
+        "home": 7.59,
+        "draw": 1.38,
+        "away": 6.86
+      },
+      "timestamp": "2026-07-15T20:47:51.906Z",
+      "seq": 831,
+      "type": "goal",
+      "team": "away"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 108,
+      "scoreHome": 1,
+      "scoreAway": 1,
+      "odds": {
+        "home": 7.98,
+        "draw": 1.36,
+        "away": 7.18
+      },
+      "timestamp": "2026-07-15T20:48:40.254Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 111,
+      "scoreHome": 1,
+      "scoreAway": 1,
+      "odds": {
+        "home": 10.4,
+        "draw": 1.3,
+        "away": 7.46
+      },
+      "timestamp": "2026-07-15T20:51:42.822Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 91,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 10.9,
+        "draw": 1.29,
+        "away": 7.62
+      },
+      "timestamp": "2026-07-15T20:52:36.800Z",
+      "seq": 870,
+      "type": "goal",
+      "team": "away"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 93,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 93.02,
+        "draw": 8.09,
+        "away": 1.16
+      },
+      "timestamp": "2026-07-15T20:54:45.589Z",
+      "seq": 873,
+      "type": "card",
+      "team": "away",
+      "card": "yellow"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 114,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 93.02,
+        "draw": 8.11,
+        "away": 1.16
+      },
+      "timestamp": "2026-07-15T20:54:52.127Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 95,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 149.93,
+        "draw": 9.78,
+        "away": 1.12
+      },
+      "timestamp": "2026-07-15T20:56:16.704Z",
+      "seq": 892,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 95,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 149.93,
+        "draw": 9.78,
+        "away": 1.12
+      },
+      "timestamp": "2026-07-15T20:56:27.234Z",
+      "seq": 893,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 95,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 149.93,
+        "draw": 9.78,
+        "away": 1.12
+      },
+      "timestamp": "2026-07-15T20:56:27.314Z",
+      "seq": 894,
+      "type": "substitution"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 118,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 140.06,
+        "draw": 9.84,
+        "away": 1.12
+      },
+      "timestamp": "2026-07-15T20:58:03.275Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 120,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 239.81,
+        "draw": 32.1,
+        "away": 1.04
+      },
+      "timestamp": "2026-07-15T21:01:17.446Z",
+      "type": "odds_tick"
+    },
+    {
+      "matchId": "txline-18241006",
+      "minute": 120,
+      "scoreHome": 1,
+      "scoreAway": 2,
+      "odds": {
+        "home": 239.81,
+        "draw": 32.1,
+        "away": 1.04
+      },
+      "timestamp": "2026-07-15T21:14:24.772Z",
+      "seq": 962,
+      "type": "fulltime"
+    }
+  ]
+}

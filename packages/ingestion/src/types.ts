@@ -24,6 +24,10 @@ export type MatchMeta = {
   fixtureId?: number;
   /** Seq of the game_finalised scores record (preferred for validateStat). */
   finalSeq?: number;
+  /** Kickoff epoch ms (from TxLINE StartTime). */
+  kickoffMs?: number;
+  /** Final score string e.g. "4-6". */
+  finalScore?: string;
 };
 
 /**

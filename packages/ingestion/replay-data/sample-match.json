@@ -5,7 +5,9 @@
     "homeTeam": "France",
     "awayTeam": "England",
     "competition": "FIFA World Cup 2026 — 3rd Place Final",
-    "finalSeq": 1195
+    "finalSeq": 1195,
+    "kickoffMs": 1784408400000,
+    "finalScore": "4-6"
   },
   "events": [
     {

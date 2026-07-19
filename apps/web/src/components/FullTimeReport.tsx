@@ -34,7 +34,7 @@ export function FullTimeReport({
       aria-label="Full-time report"
       className={`rounded-2xl border p-4 sm:p-5 ${
         status === "settled"
-          ? "border-turf bg-turf/10 shadow-[0_8px_28px_rgba(24,38,32,0.08)]"
+          ? "border-turf bg-turf/10 shadow-[0_0_40px_var(--color-glow)]"
           : status === "settling"
             ? "border-caution bg-caution/10"
             : status === "failed"

@@ -98,7 +98,7 @@ function handleStream(req: import("node:http").IncomingMessage, res: import("nod
     config.replayFile = selected.file;
     config.useReplayMode = true;
   }
-  const matchId = selected?.id ?? (config.useReplayMode ? "fra-eng-3rd" : "live");
+  const matchId = selected?.id ?? (config.useReplayMode ? "txline-18257865" : "live");
   const agent = createAgent(config);
 
   res.writeHead(200, {
@@ -181,7 +181,7 @@ const server = createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Onside API  → http://127.0.0.1:${PORT}`);
-  console.log(`  GET /api/stream?match=bra-fra`);
+  console.log(`  GET /api/stream?match=txline-18257865`);
   console.log(`  GET /api/wallet`);
   console.log(`  GET /api/settlement/latest`);
 });

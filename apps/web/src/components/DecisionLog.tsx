@@ -9,14 +9,14 @@ import { ExecutedStamp } from "./Stamp";
 const ACCENT: Record<TeamSide, string> = {
   home: "text-turf border-turf",
   away: "text-whistle border-whistle",
-  neutral: "text-linesman border-linesman",
+  neutral: "text-ink border-linesman",
 };
 
 /** Stamp seal inherits currentColor — same team rule as the log entry. */
 const STAMP: Record<TeamSide, string> = {
   home: "text-turf",
   away: "text-whistle",
-  neutral: "text-linesman",
+  neutral: "text-ink",
 };
 
 const RULE_LABEL: Record<string, string> = {
@@ -45,7 +45,7 @@ export function DecisionLog({
   return (
     <section
       aria-label="Decision log"
-      className="flex h-full flex-col rounded-2xl border border-hairline bg-panel shadow-[0_8px_28px_rgba(24,38,32,0.06)]"
+      className="flex h-full flex-col rounded-2xl border border-hairline bg-panel/80 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
     >
       <header className="border-b border-hairline px-5 py-4 sm:px-6">
         <h2 className="font-display text-2xl font-semibold tracking-tight">Decision log</h2>

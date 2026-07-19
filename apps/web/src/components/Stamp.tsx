@@ -24,7 +24,7 @@ export function SealIcon({ className }: { className?: string }) {
       <path
         d="M7.8 12.2l2.7 2.7 5.7-5.8"
         fill="none"
-        stroke="var(--color-chalk)"
+        stroke="#0b0f0d"
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"

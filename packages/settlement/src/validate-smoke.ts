@@ -57,8 +57,16 @@ async function main() {
     .reverse()
     .find((r) => String(r.Action ?? "").toLowerCase() === "game_finalised");
   if (!final?.Score) throw new Error("No game_finalised record with Score on this fixture");
-  const p1 = final.Score.Participant1.Total.Goals;
-  const p2 = final.Score.Participant2.Total.Goals;
+  // TxLINE omits Goals:0 on zero-score sides — fall back to Stats keys / 0.
+  const p1 = Number(
+    final.Score?.Participant1?.Total?.Goals ?? final.Stats?.["1"] ?? 0,
+  );
+  const p2 = Number(
+    final.Score?.Participant2?.Total?.Goals ?? final.Stats?.["2"] ?? 0,
+  );
+  if (!Number.isFinite(p1) || !Number.isFinite(p2)) {
+    throw new Error("Could not read final goals from score snapshot");
+  }
   const p1Home = final.Participant1IsHome ?? true;
   const home = p1Home ? p1 : p2;
   const away = p1Home ? p2 : p1;

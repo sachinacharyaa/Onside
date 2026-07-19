@@ -136,8 +136,13 @@ function goalsFromRecordOrValidation(
   let p1 = Number(validation.statToProve?.value);
   let p2 = Number(validation.statToProve2?.value);
   if (!Number.isFinite(p1) || !Number.isFinite(p2)) {
-    p1 = Number(record?.Score?.Participant1?.Total?.Goals);
-    p2 = Number(record?.Score?.Participant2?.Total?.Goals);
+    // TxLINE omits Goals when zero — prefer Score.Total, else Stats keys 1/2.
+    p1 = Number(
+      record?.Score?.Participant1?.Total?.Goals ?? record?.Stats?.["1"] ?? 0,
+    );
+    p2 = Number(
+      record?.Score?.Participant2?.Total?.Goals ?? record?.Stats?.["2"] ?? 0,
+    );
   }
   if (!Number.isFinite(p1) || !Number.isFinite(p2)) {
     throw new Error("Could not read P1/P2 total goals from validation or score record");

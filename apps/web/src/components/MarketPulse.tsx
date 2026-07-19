@@ -33,7 +33,7 @@ export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: Matc
   return (
     <section
       aria-label="Market chart"
-      className="rounded-2xl border border-hairline bg-panel p-4 shadow-[0_8px_28px_rgba(24,38,32,0.06)]"
+      className="rounded-2xl border border-hairline bg-panel/80 p-4"
     >
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-display text-xl font-semibold tracking-tight">Market pulse</h2>

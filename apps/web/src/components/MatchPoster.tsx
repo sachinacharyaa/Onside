@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import type { FeaturedMatch } from "@/lib/matches";
-import { MatchCrest } from "./LandingIcons";
+
+const ACCENT_BG: Record<FeaturedMatch["accent"], string> = {
+  turf: "from-turf/30 via-panel to-panel",
+  caution: "from-caution/25 via-panel to-panel",
+  whistle: "from-whistle/25 via-panel to-panel",
+};
 
 const ACCENT_TEXT: Record<FeaturedMatch["accent"], string> = {
   turf: "text-turf",
@@ -8,15 +13,26 @@ const ACCENT_TEXT: Record<FeaturedMatch["accent"], string> = {
   whistle: "text-whistle",
 };
 
-/** Large featured match card — typographic crest only (no stock photography). */
+/** Large featured match poster — competitor-grade hero card. */
 export function MatchPoster({ match }: { match: FeaturedMatch }) {
   return (
-    <article className="relative overflow-hidden rounded-2xl border border-hairline bg-gradient-to-br from-turf/15 via-panel to-chalk-2 shadow-[0_16px_48px_rgba(24,38,32,0.1)]">
+    <article
+      className={`relative overflow-hidden rounded-2xl border border-hairline bg-gradient-to-br ${ACCENT_BG[match.accent]} shadow-[0_20px_60px_rgba(0,0,0,0.45)]`}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        aria-hidden
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(-12deg, transparent, transparent 28px, #fff 29px)",
+        }}
+      />
+
       <div className="relative grid gap-6 p-6 sm:p-8 lg:grid-cols-[1.2fr_1fr] lg:items-stretch">
         <div className="flex flex-col">
           <div className="flex flex-wrap items-center gap-3">
             <span
-              className={`rounded-full border border-current/30 bg-panel px-3 py-1 text-sm font-medium ${ACCENT_TEXT[match.accent]}`}
+              className={`rounded-full border border-current/30 bg-chalk/40 px-3 py-1 text-sm font-medium ${ACCENT_TEXT[match.accent]}`}
             >
               {match.tag}
             </span>
@@ -25,19 +41,11 @@ export function MatchPoster({ match }: { match: FeaturedMatch }) {
             </span>
           </div>
 
-          <div className="mt-5 flex items-start gap-5">
-            <MatchCrest
-              home={match.home}
-              away={match.away}
-              accent={match.accent}
-              className="h-20 w-20 shrink-0"
-            />
-            <h2 className="font-display text-4xl font-semibold leading-snug tracking-tight sm:text-5xl">
-              <span className="text-ink">{match.home}</span>
-              <span className="mx-3 text-linesman">vs</span>
-              <span className="block text-ink sm:inline">{match.away}</span>
-            </h2>
-          </div>
+          <h2 className="mt-5 font-display text-4xl font-semibold leading-snug tracking-tight sm:text-5xl lg:text-6xl">
+            <span className="text-ink">{match.home}</span>
+            <span className="mx-3 text-linesman">vs</span>
+            <span className="block text-ink sm:inline">{match.away}</span>
+          </h2>
 
           <p className="mt-4 max-w-md text-sm leading-relaxed text-linesman sm:text-base">
             {match.blurb}
@@ -52,14 +60,15 @@ export function MatchPoster({ match }: { match: FeaturedMatch }) {
             </Link>
             <Link
               to="/rulebook"
-              className="inline-flex min-h-12 items-center rounded-full border border-hairline bg-panel px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-turf/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+              className="inline-flex min-h-12 items-center rounded-full border border-hairline bg-chalk/40 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-turf/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
             >
               View rulebook
             </Link>
           </div>
         </div>
 
-        <div className="flex flex-col justify-between rounded-xl border border-hairline bg-panel p-5">
+        {/* Odds lean panel */}
+        <div className="flex flex-col justify-between rounded-xl border border-hairline bg-chalk/60 p-5 backdrop-blur-sm">
           <div>
             <p className="text-sm font-medium tracking-wide text-linesman">
               Implied lean at kickoff
@@ -98,7 +107,7 @@ function LeanBar({ label, pct, color }: { label: string; pct: number; color: str
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-hairline bg-chalk px-3 py-2">
+    <div className="rounded-lg border border-hairline bg-panel px-3 py-2">
       <p className="text-xs font-medium tracking-wide text-linesman">{label}</p>
       <p className="font-display text-sm font-semibold tracking-tight text-ink">{value}</p>
     </div>
@@ -112,24 +121,16 @@ export function MatchCard({ match }: { match: FeaturedMatch }) {
       to={`/live?match=${match.id}`}
       className="group flex flex-col rounded-2xl border border-hairline bg-panel p-5 transition-colors hover:border-turf/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
     >
-      <MatchCrest
-        home={match.home}
-        away={match.away}
-        accent={match.accent}
-        className="mb-3 h-16 w-16 self-center"
-      />
-      <span className={`text-center text-sm font-medium tracking-wide ${ACCENT_TEXT[match.accent]}`}>
+      <span className={`text-sm font-medium tracking-wide ${ACCENT_TEXT[match.accent]}`}>
         {match.tag}
       </span>
-      <h3 className="mt-2 text-center font-display text-2xl font-semibold leading-snug tracking-tight">
+      <h3 className="mt-3 font-display text-2xl font-semibold leading-snug tracking-tight">
         {match.home}
         <span className="mx-2 text-linesman">vs</span>
         {match.away}
       </h3>
-      <p className="mt-2 line-clamp-2 text-center text-sm leading-relaxed text-linesman">
-        {match.blurb}
-      </p>
-      <span className="mt-4 text-center text-sm font-semibold text-turf group-hover:underline">
+      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-linesman">{match.blurb}</p>
+      <span className="mt-4 text-sm font-semibold text-turf group-hover:underline">
         Open live stage →
       </span>
     </Link>

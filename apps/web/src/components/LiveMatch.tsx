@@ -22,7 +22,7 @@ const LAST_PROOF_KEY = "onside:last-settlement";
  * Live match stage — decision log + settlement are primary.
  * Market pulse is supporting. Rulebook lives on its own route.
  */
-export function LiveMatch({ initialMatchId = "fra-eng-3rd" }: { initialMatchId?: string }) {
+export function LiveMatch({ initialMatchId = "txline-18257865" }: { initialMatchId?: string }) {
   const [matchId, setMatchId] = useState(initialMatchId);
 
   useEffect(() => {

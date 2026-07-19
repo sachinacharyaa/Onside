@@ -38,7 +38,7 @@ export function WalletChip() {
       className="inline-flex min-h-10 items-center gap-2 rounded-full border border-hairline bg-panel px-3 py-1.5 text-xs transition-colors hover:border-turf/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
       title="Agent settler wallet on Solana Explorer"
     >
-      <span className="h-2 w-2 rounded-full bg-turf" aria-hidden />
+      <span className="h-2 w-2 rounded-full bg-turf shadow-[0_0_8px_var(--color-turf)]" aria-hidden />
       <span className="font-medium tracking-wide text-linesman">Agent</span>
       <span className="font-mono text-ink">{agent.short}</span>
     </a>

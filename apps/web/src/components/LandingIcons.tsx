@@ -31,8 +31,8 @@ export function IconWhistleCall({ className = "h-12 w-12" }: { className?: strin
         opacity="0.9"
       />
       <circle cx="42" cy="32" r="10" fill="currentColor" />
-      <circle cx="42" cy="32" r="4" fill="var(--color-chalk)" />
-      <path d="M22 28h8M22 36h6" stroke="var(--color-chalk)" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="42" cy="32" r="4" fill="#0b0f0d" />
+      <path d="M22 28h8M22 36h6" stroke="#0b0f0d" strokeWidth="2" strokeLinecap="round" />
       <path
         d="M50 18c4 4 6 8 6 14"
         stroke="currentColor"
@@ -125,7 +125,7 @@ export function MatchCrest({
         y="42"
         textAnchor="middle"
         fill={color}
-        fontFamily="Barlow Condensed, Archivo, sans-serif"
+        fontFamily="Playfair Display, Georgia, serif"
         fontWeight="700"
         fontSize="14"
         letterSpacing="1"
@@ -137,7 +137,7 @@ export function MatchCrest({
         y="58"
         textAnchor="middle"
         fill="var(--color-linesman)"
-        fontFamily="Barlow Condensed, Archivo, sans-serif"
+        fontFamily="Playfair Display, Georgia, serif"
         fontWeight="600"
         fontSize="10"
       >
@@ -148,7 +148,7 @@ export function MatchCrest({
         y="74"
         textAnchor="middle"
         fill="var(--color-ink)"
-        fontFamily="Barlow Condensed, Archivo, sans-serif"
+        fontFamily="Playfair Display, Georgia, serif"
         fontWeight="700"
         fontSize="14"
         letterSpacing="1"

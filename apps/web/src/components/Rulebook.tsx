@@ -27,7 +27,7 @@ export function Rulebook({ settleThreshold }: { settleThreshold: number }) {
   return (
     <section
       aria-label="The rulebook"
-      className="rounded-2xl border border-hairline bg-panel p-4 shadow-[0_8px_28px_rgba(24,38,32,0.06)] sm:p-5"
+      className="rounded-2xl border border-hairline bg-panel/80 p-4 sm:p-5"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-display text-xl font-semibold tracking-tight">The rulebook</h2>

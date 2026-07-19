@@ -30,6 +30,16 @@ const KNOWN_FIXTURES: Record<number, Omit<MatchMeta, "matchId" | "fixtureId" | "
     awayTeam: "Argentina",
     competition: "FIFA World Cup 2026 — Final",
   },
+  18241006: {
+    homeTeam: "England",
+    awayTeam: "Argentina",
+    competition: "FIFA World Cup 2026 — Semi-final",
+  },
+  18237038: {
+    homeTeam: "France",
+    awayTeam: "Spain",
+    competition: "FIFA World Cup 2026 — Semi-final",
+  },
 };
 
 async function main() {
