@@ -1,104 +1,21 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createAgent, loadConfig, type Decision } from "@onside/agent-runtime";
 import { getReplayById, listReplays, type MatchEvent } from "@onside/ingestion";
 import type { NarrationLine } from "@onside/narration-engine";
 import type { SettlementProof } from "@onside/settlement";
-import { Keypair } from "@solana/web3.js";
-import bs58 from "bs58";
+import {
+  handleLatestSettlement,
+  handleWallet,
+  persistSettlement,
+  sendJson,
+  sendOptions,
+} from "./light-api.js";
 
-/** Local `.data` or Vercel `/tmp` (ephemeral across cold starts). */
-const DATA_DIR = process.env.VERCEL
-  ? join("/tmp", "onside")
-  : existsSync(join(process.cwd(), "apps/web"))
-    ? join(process.cwd(), "apps/web/.data")
-    : join(process.cwd(), ".data");
-const LAST_SETTLEMENT_PATH = join(DATA_DIR, "last-settlement.json");
+export { handleLatestSettlement, handleWallet, persistSettlement };
 
-/** In-memory fallback when the filesystem is unavailable. */
-let memorySettlement: SettlementProof | null = null;
-
-function loadDotEnv(): void {
-  if (process.env.VERCEL) return; // Vercel injects env vars
-  const candidates = [
-    join(process.cwd(), ".env"),
-    join(process.cwd(), "../../.env"),
-    join(process.cwd(), "apps/web/.env"),
-  ];
-  for (const envPath of candidates) {
-    if (!existsSync(envPath)) continue;
-    for (const line of readFileSync(envPath, "utf8").split(/\r?\n/)) {
-      const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/);
-      if (!match) continue;
-      const [, key, raw] = match;
-      const value = raw.replace(/\s+#.*$/, "").trim();
-      if (process.env[key] === undefined && value !== "") process.env[key] = value;
-    }
-    break;
-  }
-}
-
-loadDotEnv();
-
-function sendJson(res: ServerResponse, status: number, body: unknown) {
-  res.writeHead(status, {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  });
-  res.end(JSON.stringify(body));
-}
-
-function persistSettlement(proof: SettlementProof): void {
-  memorySettlement = proof;
-  try {
-    mkdirSync(DATA_DIR, { recursive: true });
-    writeFileSync(LAST_SETTLEMENT_PATH, JSON.stringify(proof, null, 2));
-  } catch (err) {
-    console.warn("Could not persist last settlement:", err);
-  }
-}
-
-export function handleWallet(_req: IncomingMessage, res: ServerResponse) {
-  const secret = process.env.AGENT_WALLET_SECRET_KEY;
-  if (!secret) {
-    return sendJson(res, 200, {
-      connected: false,
-      address: null,
-      label: "Agent wallet not configured",
-    });
-  }
-  try {
-    const keypair = Keypair.fromSecretKey(bs58.decode(secret));
-    const address = keypair.publicKey.toBase58();
-    return sendJson(res, 200, {
-      connected: true,
-      address,
-      short: `${address.slice(0, 4)}…${address.slice(-4)}`,
-      cluster: "devnet",
-      label: "Agent wallet",
-    });
-  } catch {
-    return sendJson(res, 500, {
-      connected: false,
-      address: null,
-      label: "Invalid agent key",
-    });
-  }
-}
-
-export function handleLatestSettlement(_req: IncomingMessage, res: ServerResponse) {
-  if (existsSync(LAST_SETTLEMENT_PATH)) {
-    try {
-      const proof = JSON.parse(readFileSync(LAST_SETTLEMENT_PATH, "utf8")) as SettlementProof;
-      return sendJson(res, 200, { proof });
-    } catch {
-      return sendJson(res, 500, { proof: null, error: "Corrupt settlement cache" });
-    }
-  }
-  return sendJson(res, 200, { proof: memorySettlement });
-}
-
+/**
+ * SSE replay / live agent stream. Heavy imports — only use from /api/stream.
+ */
 export function handleStream(req: IncomingMessage, res: ServerResponse) {
   const url = new URL(req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
   const config = loadConfig();
@@ -164,18 +81,12 @@ export function handleStream(req: IncomingMessage, res: ServerResponse) {
   agent.start();
 }
 
-/** Shared router for local Node server and Vercel serverless. */
+/** Shared router for local Node server. */
 export function handleApiRequest(req: IncomingMessage, res: ServerResponse): void {
   const path = req.url?.split("?")[0] ?? "/";
 
   if (req.method === "OPTIONS") {
-    res.writeHead(204, {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    });
-    res.end();
-    return;
+    return sendOptions(res);
   }
 
   if ((path === "/api/wallet" || path === "/wallet") && req.method === "GET") {

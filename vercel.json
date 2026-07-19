@@ -7,13 +7,15 @@
   "functions": {
     "api/stream.ts": {
       "maxDuration": 300,
-      "includeFiles": "packages/ingestion/replay-data/**"
+      "includeFiles": "{packages/**,apps/web/server/**,node_modules/@onside/**}"
     },
     "api/wallet.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "apps/web/server/light-api.ts"
     },
     "api/settlement/latest.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "includeFiles": "apps/web/server/light-api.ts"
     }
   },
   "rewrites": [

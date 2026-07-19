@@ -21,6 +21,10 @@
     "txline:record": "npm run record --workspace=@onside/txline-setup --",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0"
+  },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "@vercel/node": "^5.8.26",
