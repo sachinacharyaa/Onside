@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 /**
- * Self-contained wallet status for Vercel.
- * Dynamic imports + try/catch so failures return JSON instead of FUNCTION_INVOCATION_FAILED.
+ * Agent wallet status — no @solana/web3.js (ESM uuid crash on Vercel).
+ * Solana secret keys are 64 bytes: [32-byte seed | 32-byte public key].
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -23,14 +23,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    const [{ Keypair }, bs58Mod] = await Promise.all([
-      import("@solana/web3.js"),
-      import("bs58"),
-    ]);
-    const bs58 = (bs58Mod as { default: { decode: (s: string) => Uint8Array } }).default;
+    const bs58Mod = await import("bs58");
+    const bs58 = (bs58Mod as { default: { decode: (s: string) => Uint8Array; encode: (b: Uint8Array) => string } }).default;
+    const bytes = bs58.decode(secret);
+    if (bytes.length < 64) {
+      return res.status(200).json({
+        connected: false,
+        address: null,
+        label: "Invalid agent key length",
+      });
+    }
 
-    const keypair = Keypair.fromSecretKey(bs58.decode(secret));
-    const address = keypair.publicKey.toBase58();
+    const address = bs58.encode(bytes.slice(32, 64));
     return res.status(200).json({
       connected: true,
       address,
