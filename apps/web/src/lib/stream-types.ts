@@ -21,5 +21,6 @@ export type StreamMessage =
   | { kind: "decision"; signalId: string; action: DecisionAction }
   | { kind: "settlement:pending"; outcome: string }
   | { kind: "settlement"; proof: SettlementProof }
+  | { kind: "settlement:failed"; outcome: string; message: string }
   | { kind: "agent-error"; message: string }
   | { kind: "end" };

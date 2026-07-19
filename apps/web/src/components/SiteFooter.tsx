@@ -19,6 +19,9 @@ export function SiteFooter() {
           >
             Live
           </Link>
+          <Link to="/proof" className="text-linesman hover:text-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf">
+            Proof
+          </Link>
           <Link
             to="/rulebook"
             className="text-linesman hover:text-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"

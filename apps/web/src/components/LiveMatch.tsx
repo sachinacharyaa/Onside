@@ -16,6 +16,8 @@ const FALLBACK_META: MatchMeta = {
   competition: "Connecting…",
 };
 
+const LAST_PROOF_KEY = "onside:last-settlement";
+
 /**
  * Live match stage — decision log + settlement are primary.
  * Market pulse is supporting. Rulebook lives on its own route.
@@ -36,6 +38,7 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
   const [decisions, setDecisions] = useState<Record<string, DecisionAction>>({});
   const [status, setStatus] = useState<SettlementStatus>("pending");
   const [proof, setProof] = useState<SettlementProof | null>(null);
+  const [settleError, setSettleError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
@@ -45,6 +48,7 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
     setDecisions({});
     setStatus("pending");
     setProof(null);
+    setSettleError(null);
     setDone(false);
 
     const source = new EventSource(`/api/stream?match=${encodeURIComponent(matchId)}`);
@@ -68,10 +72,23 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
           break;
         case "settlement:pending":
           setStatus("settling");
+          setSettleError(null);
           break;
         case "settlement":
           setStatus("settled");
           setProof(msg.proof);
+          setSettleError(null);
+          setDone(true);
+          try {
+            sessionStorage.setItem(LAST_PROOF_KEY, JSON.stringify(msg.proof));
+          } catch {
+            /* ignore quota */
+          }
+          source.close();
+          break;
+        case "settlement:failed":
+          setStatus("failed");
+          setSettleError(msg.message);
           setDone(true);
           source.close();
           break;
@@ -133,7 +150,7 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
         </div>
       </div>
 
-      <ScoreboardBand meta={meta} lastEvent={lastEvent} live={!done} />
+      <ScoreboardBand meta={meta} lastEvent={lastEvent} live={!done && status !== "failed"} />
 
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 px-5 py-5 lg:grid-cols-5 lg:gap-6 lg:px-8 lg:py-6">
         <div className="min-h-[28rem] lg:col-span-3 lg:min-h-[34rem]">
@@ -141,11 +158,18 @@ export function LiveMatch({ initialMatchId = "bra-fra" }: { initialMatchId?: str
             lines={lines}
             decisions={decisions}
             settleThreshold={settleThreshold}
+            proof={proof}
           />
         </div>
 
         <aside className="flex flex-col gap-5 lg:col-span-2">
-          <FullTimeReport status={status} proof={proof} meta={meta} />
+          <FullTimeReport
+            status={status}
+            proof={proof}
+            meta={meta}
+            errorMessage={settleError}
+            onRetry={status === "failed" ? () => setRunId((n) => n + 1) : undefined}
+          />
           <MarketPulse events={events} meta={meta} />
           <p className="text-sm text-linesman">
             Thresholds live in the{" "}

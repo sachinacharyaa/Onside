@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createAgent, loadConfig, type Decision } from "@onside/agent-runtime";
@@ -12,6 +12,32 @@ import bs58 from "bs58";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.API_PORT ?? 3001);
 const isProd = process.env.NODE_ENV === "production";
+const DATA_DIR = join(__dirname, "../.data");
+const LAST_SETTLEMENT_PATH = join(DATA_DIR, "last-settlement.json");
+
+function persistSettlement(proof: SettlementProof): void {
+  try {
+    mkdirSync(DATA_DIR, { recursive: true });
+    writeFileSync(LAST_SETTLEMENT_PATH, JSON.stringify(proof, null, 2));
+  } catch (err) {
+    console.warn("Could not persist last settlement:", err);
+  }
+}
+
+function handleLatestSettlement(
+  _req: import("node:http").IncomingMessage,
+  res: import("node:http").ServerResponse,
+) {
+  if (!existsSync(LAST_SETTLEMENT_PATH)) {
+    return sendJson(res, 200, { proof: null });
+  }
+  try {
+    const proof = JSON.parse(readFileSync(LAST_SETTLEMENT_PATH, "utf8")) as SettlementProof;
+    return sendJson(res, 200, { proof });
+  } catch {
+    return sendJson(res, 500, { proof: null, error: "Corrupt settlement cache" });
+  }
+}
 
 function loadDotEnv(): void {
   const candidates = [
@@ -23,9 +49,10 @@ function loadDotEnv(): void {
   for (const envPath of candidates) {
     if (!existsSync(envPath)) continue;
     for (const line of readFileSync(envPath, "utf8").split(/\r?\n/)) {
-      const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*(#.*)?$/);
+      const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/);
       if (!match) continue;
-      const [, key, value] = match;
+      const [, key, raw] = match;
+      const value = raw.replace(/\s+#.*$/, "").trim();
       if (process.env[key] === undefined && value !== "") process.env[key] = value;
     }
     break;
@@ -111,7 +138,13 @@ function handleStream(req: import("node:http").IncomingMessage, res: import("nod
     send({ kind: "settlement:pending", outcome }),
   );
   agent.on("settlement", (proof: SettlementProof) => {
+    persistSettlement(proof);
     send({ kind: "settlement", proof });
+    send({ kind: "end" });
+    close();
+  });
+  agent.on("settlement:failed", (payload: { outcome: string; message: string }) => {
+    send({ kind: "settlement:failed", ...payload });
     send({ kind: "end" });
     close();
   });
@@ -134,6 +167,7 @@ const server = createServer((req, res) => {
   }
 
   if (path === "/api/wallet" && req.method === "GET") return handleWallet(req, res);
+  if (path === "/api/settlement/latest" && req.method === "GET") return handleLatestSettlement(req, res);
   if (path === "/api/stream" && req.method === "GET") return handleStream(req, res);
 
   if (isProd) {
@@ -149,4 +183,5 @@ server.listen(PORT, () => {
   console.log(`Onside API  → http://127.0.0.1:${PORT}`);
   console.log(`  GET /api/stream?match=bra-fra`);
   console.log(`  GET /api/wallet`);
+  console.log(`  GET /api/settlement/latest`);
 });

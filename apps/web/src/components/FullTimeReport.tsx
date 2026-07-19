@@ -2,7 +2,7 @@ import type { MatchMeta } from "@onside/ingestion";
 import type { SettlementProof } from "@onside/settlement";
 import { SealIcon } from "./Stamp";
 
-export type SettlementStatus = "pending" | "settling" | "settled";
+export type SettlementStatus = "pending" | "settling" | "settled" | "failed";
 
 /**
  * The payoff: the official's full-time report. In play → PENDING;
@@ -13,10 +13,14 @@ export function FullTimeReport({
   status,
   proof,
   meta,
+  errorMessage,
+  onRetry,
 }: {
   status: SettlementStatus;
   proof: SettlementProof | null;
   meta: MatchMeta;
+  errorMessage?: string | null;
+  onRetry?: () => void;
 }) {
   const outcomeLabel =
     proof?.finalOutcome === "home"
@@ -33,7 +37,9 @@ export function FullTimeReport({
           ? "border-turf bg-turf/10 shadow-[0_0_40px_var(--color-glow)]"
           : status === "settling"
             ? "border-caution bg-caution/10"
-            : "border-hairline bg-panel/80"
+            : status === "failed"
+              ? "border-whistle bg-whistle/10"
+              : "border-hairline bg-panel/80"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -44,6 +50,14 @@ export function FullTimeReport({
             aria-hidden="true"
           >
             Settled
+          </span>
+        )}
+        {status === "failed" && (
+          <span
+            className="rounded-sm border-2 border-whistle px-2 py-0.5 text-sm font-semibold text-whistle"
+            aria-hidden="true"
+          >
+            Failed
           </span>
         )}
       </div>
@@ -61,6 +75,24 @@ export function FullTimeReport({
         </p>
       )}
 
+      {status === "failed" && (
+        <div className="mt-2 space-y-3 text-sm leading-relaxed">
+          <p className="text-whistle">
+            Settlement failed{errorMessage ? `: ${errorMessage}` : "."} No fake proof was written.
+            Fund the agent wallet and retry.
+          </p>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="inline-flex min-h-10 items-center rounded-full bg-whistle px-4 py-1.5 text-sm font-semibold text-chalk hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-whistle"
+            >
+              Retry settlement
+            </button>
+          )}
+        </div>
+      )}
+
       {status === "settled" && proof && (
         <div className="mt-2 space-y-2 text-sm leading-relaxed">
           <p className="flex items-center gap-2">
@@ -68,25 +100,19 @@ export function FullTimeReport({
             <span>
               Report filed: <strong>{outcomeLabel}</strong>, settled by rule{" "}
               {proof.triggeringSignal.rule.replace(/_/g, " ").toLowerCase()} at{" "}
-              {proof.triggeringSignal.confidence}% confidence.
+              {proof.triggeringSignal.confidence}% confidence ({proof.mode}).
             </span>
           </p>
-          {proof.explorerUrl ? (
-            <p>
-              <a
-                href={proof.explorerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-turf underline decoration-turf/50 underline-offset-4 hover:decoration-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
-              >
-                View the proof on Solana Explorer ↗
-              </a>
-            </p>
-          ) : (
-            <p className="text-linesman">
-              Simulated settlement. Add a funded devnet wallet to file this on-chain.
-            </p>
-          )}
+          <p>
+            <a
+              href={proof.explorerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-turf underline decoration-turf/50 underline-offset-4 hover:decoration-turf focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+            >
+              View the proof on Solana Explorer ↗
+            </a>
+          </p>
           <p className="break-all font-mono text-xs text-linesman">tx {proof.txSignature}</p>
         </div>
       )}

@@ -96,19 +96,12 @@ export function createAgent(config: AgentConfig): SettlingAgent {
       emitter.emit("narration", renderSettlement(signal, outcome, proof.txSignature, source.meta));
       emitter.emit("settlement", proof);
     } catch (err) {
-      // Devnet hiccup / unfunded wallet: degrade to a simulated proof so the
-      // demo flow always completes, and surface the error for the operator.
-      emitter.emit("error", err instanceof Error ? err : new Error(String(err)));
-      const proof = await settleOnChain(
-        { rpcUrl: config.solanaRpcUrl },
-        signal.triggeredBy.matchId,
-        outcome,
-        signal,
-      );
-      state.settlement = "settled";
-      state.proof = proof;
-      emitter.emit("narration", renderSettlement(signal, outcome, proof.txSignature, source.meta));
-      emitter.emit("settlement", proof);
+      const error = err instanceof Error ? err : new Error(String(err));
+      state.settlement = "failed";
+      state.proof = null;
+      // Never fabricate a SIMULATED- signature. Surface failure so the UI can retry.
+      emitter.emit("error", error);
+      emitter.emit("settlement:failed", { outcome, message: error.message });
     }
   }
 

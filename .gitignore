@@ -4,6 +4,7 @@ dist/
 .env
 *.tsbuildinfo
 .DS_Store
+apps/web/.data/
 
 # Anchor build artifacts
 packages/settlement/anchor-program/target/

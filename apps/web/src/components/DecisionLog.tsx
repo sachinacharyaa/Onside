@@ -1,4 +1,5 @@
 import type { NarrationLine } from "@onside/narration-engine";
+import type { SettlementProof } from "@onside/settlement";
 import { executedLabel, isExecuted, sideOfLine, type TeamSide } from "@/lib/log-model";
 import type { DecisionAction } from "@/lib/stream-types";
 import { CardChip } from "./CardChip";
@@ -32,10 +33,12 @@ export function DecisionLog({
   lines,
   decisions,
   settleThreshold,
+  proof = null,
 }: {
   lines: NarrationLine[];
   decisions: Record<string, DecisionAction>;
   settleThreshold: number;
+  proof?: SettlementProof | null;
 }) {
   const newestFirst = [...lines].reverse();
 
@@ -66,6 +69,10 @@ export function DecisionLog({
           const event = line.signal.triggeredBy;
           const isCardEvent = event.type === "card" && event.card !== undefined;
           const accent = ACCENT[side];
+          const isSettleLine =
+            line.signal.suggestedAction.startsWith("SETTLE_") ||
+            (proof != null && line.text.includes(proof.txSignature));
+          const showProofLink = Boolean(proof?.explorerUrl && isSettleLine);
 
           return (
             <li
@@ -89,13 +96,15 @@ export function DecisionLog({
 
               <p
                 className={`mt-1 leading-relaxed ${
-                  executed ? "text-base text-ink sm:text-[17px]" : "text-sm text-linesman sm:text-[15px]"
+                  executed
+                    ? "text-base text-ink sm:text-[17px]"
+                    : "text-sm text-linesman sm:text-[15px]"
                 }`}
               >
                 {line.text}
               </p>
 
-              <div className="mt-2">
+              <div className="mt-2 flex flex-wrap items-center gap-3">
                 {executed ? (
                   <span className={STAMP[side]}>
                     <ExecutedStamp label={executedLabel(line)} />
@@ -109,6 +118,17 @@ export function DecisionLog({
                     Noted. Didn&rsquo;t clear the {settleThreshold}% bar. No action taken.
                   </span>
                 ) : null}
+
+                {showProofLink && proof && (
+                  <a
+                    href={proof.explorerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-turf underline decoration-turf/40 underline-offset-4 hover:decoration-turf"
+                  >
+                    View settlement tx ↗
+                  </a>
+                )}
               </div>
             </li>
           );

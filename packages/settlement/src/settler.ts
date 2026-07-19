@@ -16,18 +16,18 @@ export type Outcome = "home" | "away" | "draw";
 export type SettlementProof = {
   matchId: string;
   finalOutcome: Outcome;
-  txSignature: string; // Solana tx hash (or SIMULATED-… when no wallet configured)
+  txSignature: string;
   settledAt: string;
   triggeringSignal: Signal;
-  explorerUrl: string | null;
-  mode: "anchor" | "memo" | "simulated";
+  explorerUrl: string;
+  mode: "anchor" | "memo";
 };
 
 export type SettlerConfig = {
   rpcUrl: string;
-  /** base58-encoded secret key. Empty → simulated mode (demo never breaks). */
+  /** base58-encoded secret key. Required for settlement. */
   walletSecretKey?: string;
-  /** Deployed Anchor program id. Empty → Memo-program proof tx fallback. */
+  /** Deployed Anchor program id. Empty → Memo-program proof tx. */
   programId?: string;
 };
 
@@ -61,11 +61,12 @@ function encodeSettleArgs(matchId: string, outcome: Outcome, hash: Buffer): Buff
 /**
  * Signs and submits the settlement transaction to Solana devnet.
  *
- * Three modes, degrading gracefully so the live demo can never dead-end:
- *  - "anchor":    calls settle_market on the deployed Anchor program
- *  - "memo":      no program id → submits a Memo tx carrying the proof JSON
- *                 (still a real, clickable devnet transaction)
- *  - "simulated": no wallet → returns a deterministic fake signature
+ * Modes:
+ *  - "anchor": wallet + programId → settle_market on the deployed program
+ *  - "memo":   wallet only → Memo program tx with proof JSON (real, clickable)
+ *
+ * Throws if no wallet is configured or the RPC submission fails.
+ * Never returns a fabricated / SIMULATED signature.
  */
 export async function settleOnChain(
   config: SettlerConfig,
@@ -77,19 +78,20 @@ export async function settleOnChain(
   const hash = proofHash(triggeringSignal);
 
   if (!config.walletSecretKey) {
-    return {
-      matchId,
-      finalOutcome: outcome,
-      txSignature: `SIMULATED-${hash.toString("hex").slice(0, 32)}`,
-      settledAt,
-      triggeringSignal,
-      explorerUrl: null,
-      mode: "simulated",
-    };
+    throw new Error(
+      "Settlement requires AGENT_WALLET_SECRET_KEY. Generate and fund a devnet wallet before settling.",
+    );
   }
 
   const connection = new Connection(config.rpcUrl, "confirmed");
   const wallet = Keypair.fromSecretKey(bs58.decode(config.walletSecretKey));
+
+  const balance = await connection.getBalance(wallet.publicKey);
+  if (balance < 5_000) {
+    throw new Error(
+      `Agent wallet ${wallet.publicKey.toBase58()} is underfunded (${balance} lamports). Airdrop SOL on devnet and retry.`,
+    );
+  }
 
   let instruction: TransactionInstruction;
   let mode: SettlementProof["mode"];

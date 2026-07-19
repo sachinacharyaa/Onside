@@ -27,10 +27,12 @@ function loadDotEnv(): void {
   const envPath = candidates.find((p) => existsSync(p));
   if (!envPath) return;
   for (const line of readFileSync(envPath, "utf8").split(/\r?\n/)) {
-    const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*(#.*)?$/);
-    if (!match) continue;
-    const [, key, value] = match;
-    if (process.env[key] === undefined && value !== "") process.env[key] = value;
+      const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/);
+      if (!match) continue;
+      const [, key, raw] = match;
+      // Strip inline comments: VALUE # comment
+      const value = raw.replace(/\s+#.*$/, "").trim();
+      if (process.env[key] === undefined && value !== "") process.env[key] = value;
   }
 }
 
