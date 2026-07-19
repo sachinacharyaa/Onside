@@ -7,8 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 const SESSION_KEY = "onside:last-settlement";
 
 /**
- * Dedicated Proof page for demos: shows the latest real on-chain settlement
- * with a clickable Solana Explorer (devnet) link.
+ * Dedicated Proof page for demos: TxLINE Merkle verification + our settlement tx.
  */
 export function ProofPage() {
   const [proof, setProof] = useState<SettlementProof | null>(null);
@@ -68,9 +67,9 @@ export function ProofPage() {
               Settlement receipt
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-linesman sm:text-lg">
-              Every full-time call lands as a real Solana devnet transaction. The memo carries
-              match id, outcome, rule, and confidence so anyone can verify the agent without
-              trusting us.
+              Verified against TxLINE&apos;s on-chain Merkle root, then filed as our own settlement
+              transaction. The outcome is not the agent&apos;s say-so. It is sponsor-sourced proof
+              anyone can re-check on Solana.
             </p>
           </div>
         </section>
@@ -82,22 +81,76 @@ export function ProofPage() {
             <div className="rounded-2xl border border-hairline bg-panel p-6">
               <h2 className="font-display text-2xl font-semibold tracking-tight">No proof yet</h2>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-linesman">
-                Run a live replay to the final whistle. When the agent settles, this page will
-                show the Explorer link for that transaction.
+                Run a live fixture (or a TxLINE-backed settle) to the final whistle. When the agent
+                settles, this page shows both the Merkle verification and the Explorer link.
               </p>
               <Link
                 to="/live?match=esp-arg"
                 className="mt-6 inline-flex min-h-12 items-center rounded-full bg-turf px-6 py-3 text-sm font-semibold text-chalk hover:opacity-90"
               >
-                Run Spain vs Argentina →
+                Open live stage →
               </Link>
             </div>
           )}
 
           {!loading && proof && (
             <div className="space-y-6">
+              {proof.txline?.onChainViewPassed && (
+                <div className="rounded-2xl border border-caution/40 bg-caution/10 p-6">
+                  <p className="text-sm font-medium tracking-wide text-caution">
+                    Verified against TxLINE&apos;s on-chain Merkle root
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink">
+                    validateStat passed for fixture {proof.txline.fixtureId}, seq{" "}
+                    {proof.txline.seq}. Proven score {proof.txline.homeGoals}–
+                    {proof.txline.awayGoals} at period 100 (game finalised).
+                  </p>
+                  <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <dt className="text-xs font-medium tracking-wide text-linesman">Method</dt>
+                      <dd className="mt-1 font-mono text-sm">{proof.txline.method}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-medium tracking-wide text-linesman">
+                        Daily scores PDA
+                      </dt>
+                      <dd className="mt-1 break-all font-mono text-xs text-linesman">
+                        {proof.txline.dailyScoresPda}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-medium tracking-wide text-linesman">
+                        TxLINE program
+                      </dt>
+                      <dd className="mt-1 break-all font-mono text-xs text-linesman">
+                        {proof.txline.programId}
+                      </dd>
+                    </div>
+                    {proof.txline.validationExplorerUrl && (
+                      <div className="sm:col-span-2">
+                        <dt className="text-xs font-medium tracking-wide text-linesman">
+                          Validation tx
+                        </dt>
+                        <dd className="mt-1">
+                          <a
+                            href={proof.txline.validationExplorerUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="break-all font-mono text-xs text-caution underline"
+                          >
+                            {proof.txline.validationTxSignature}
+                          </a>
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              )}
+
               <div className="rounded-2xl border border-turf bg-turf/10 p-6 shadow-[0_0_40px_var(--color-glow)]">
-                <p className="text-sm font-medium tracking-wide text-turf">Confirmed on devnet</p>
+                <p className="text-sm font-medium tracking-wide text-turf">
+                  Agent settlement on Solana
+                </p>
                 <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight">
                   {outcome}
                 </h2>
@@ -113,7 +166,7 @@ export function ProofPage() {
                   <div>
                     <dt className="text-xs font-medium tracking-wide text-linesman">Rule</dt>
                     <dd className="mt-1 text-sm text-ink">
-                      {proof.triggeringSignal.rule} · {proof.triggeringSignal.confidence}%
+                      {proof.triggeringSignal.rule}, {proof.triggeringSignal.confidence}%
                     </dd>
                   </div>
                   <div>
@@ -128,7 +181,7 @@ export function ProofPage() {
                   rel="noopener noreferrer"
                   className="mt-8 inline-flex min-h-12 items-center rounded-full bg-turf px-6 py-3 text-sm font-semibold text-chalk hover:opacity-90"
                 >
-                  Open on Solana Explorer ↗
+                  Open settlement tx on Solana Explorer ↗
                 </a>
                 <p className="mt-4 break-all font-mono text-xs text-linesman">
                   {proof.txSignature}

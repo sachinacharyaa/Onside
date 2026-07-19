@@ -17,6 +17,7 @@
     "txline:fixtures": "npm run fixtures --workspace=@onside/txline-setup",
     "txline:verify": "npm run verify --workspace=@onside/txline-setup",
     "txline:live-smoke": "npm run live-smoke --workspace=@onside/txline-setup",
+    "txline:validate-smoke": "npm run validate-smoke --workspace=@onside/settlement",
     "txline:record": "npm run record --workspace=@onside/txline-setup --",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },

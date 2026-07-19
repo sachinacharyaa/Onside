@@ -3,14 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "src/settler.ts",
-  "types": "src/settler.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
-    "wallet:generate": "tsx src/generate-wallet.ts"
+    "wallet:generate": "tsx src/generate-wallet.ts",
+    "validate-smoke": "tsx src/validate-smoke.ts"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
     "@onside/signal-engine": "*",
     "@solana/web3.js": "^1.98.0",
+    "@types/bn.js": "^5.2.0",
+    "bn.js": "^5.2.5",
     "bs58": "^6.0.0"
   }
 }

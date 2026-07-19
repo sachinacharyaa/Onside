@@ -33,13 +33,28 @@ export interface SettlingAgent extends EventEmitter {
   stop(): void;
 }
 
+const TXLINE_DEVNET_PROGRAM = "6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J";
+
+function resolveTxlineFixtureId(config: AgentConfig, matchId: string): number | undefined {
+  const fromMatch = /^txline-(\d+)$/.exec(matchId);
+  if (fromMatch) return Number(fromMatch[1]);
+  if (config.txlineFixtureId && Number.isFinite(config.txlineFixtureId)) {
+    return config.txlineFixtureId;
+  }
+  return undefined;
+}
+
+function preferredSeqFromSource(source: MatchEventSource): number | undefined {
+  const maybe = source as MatchEventSource & {
+    normalizer?: { lastScoreSeq: number | null };
+  };
+  const seq = maybe.normalizer?.lastScoreSeq;
+  return typeof seq === "number" && seq >= 1 ? seq : undefined;
+}
+
 /**
  * Orchestrates the full pipeline:
  * ingest -> evaluate rules -> narrate -> decide -> settle on-chain.
- *
- * Emits: "event" (MatchEvent), "narration" (NarrationLine),
- *        "decision" (Decision), "settlement" (SettlementProof),
- *        "error" (Error), "end" ().
  */
 export function createAgent(config: AgentConfig): SettlingAgent {
   const emitter = new EventEmitter() as SettlingAgent & { meta: MatchMeta; state: AgentState };
@@ -81,13 +96,31 @@ export function createAgent(config: AgentConfig): SettlingAgent {
     state.settlement = "pending";
     emitter.emit("settlement:pending", { outcome });
     try {
+      const matchId = signal.triggeredBy.matchId;
+      const fixtureId = resolveTxlineFixtureId(config, matchId);
+      const canValidate =
+        Boolean(config.txlineApiUrl && config.txlineApiToken && fixtureId) &&
+        (!config.useReplayMode || matchId.startsWith("txline-"));
+
       const proof = await settleOnChain(
         {
           rpcUrl: config.solanaRpcUrl,
           walletSecretKey: config.walletSecretKey,
           programId: config.programId,
+          txline:
+            canValidate && fixtureId && config.txlineApiUrl && config.txlineApiToken
+              ? {
+                  auth: {
+                    apiUrl: config.txlineApiUrl,
+                    apiToken: config.txlineApiToken,
+                  },
+                  txlineProgramId: process.env.TXLINE_PROGRAM_ID ?? TXLINE_DEVNET_PROGRAM,
+                  fixtureId,
+                  preferredSeq: preferredSeqFromSource(source),
+                }
+              : undefined,
         },
-        signal.triggeredBy.matchId,
+        matchId,
         outcome,
         signal,
       );
@@ -99,7 +132,6 @@ export function createAgent(config: AgentConfig): SettlingAgent {
       const error = err instanceof Error ? err : new Error(String(err));
       state.settlement = "failed";
       state.proof = null;
-      // Never fabricate a SIMULATED- signature. Surface failure so the UI can retry.
       emitter.emit("error", error);
       emitter.emit("settlement:failed", { outcome, message: error.message });
     }

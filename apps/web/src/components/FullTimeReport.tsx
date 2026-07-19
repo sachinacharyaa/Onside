@@ -103,6 +103,13 @@ export function FullTimeReport({
               {proof.triggeringSignal.confidence}% confidence ({proof.mode}).
             </span>
           </p>
+          {proof.txline?.onChainViewPassed && (
+            <p className="text-caution">
+              Verified against TxLINE&apos;s on-chain Merkle root (fixture{" "}
+              {proof.txline.fixtureId}, seq {proof.txline.seq}, score{" "}
+              {proof.txline.homeGoals}–{proof.txline.awayGoals}).
+            </p>
+          )}
           <p>
             <a
               href={proof.explorerUrl}

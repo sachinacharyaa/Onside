@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import {
+  ComputeBudgetProgram,
   Connection,
   Keypair,
   PublicKey,
@@ -10,8 +11,22 @@ import {
 } from "@solana/web3.js";
 import bs58 from "bs58";
 import type { Signal } from "@onside/signal-engine";
+import {
+  validateFinalOutcome,
+  type TxlineApiAuth,
+  type TxlineValidationResult,
+} from "./txline-validation.js";
 
 export type Outcome = "home" | "away" | "draw";
+
+export type TxlineSettlementContext = {
+  auth: TxlineApiAuth;
+  /** TxLINE program id (devnet by default). */
+  txlineProgramId: string;
+  fixtureId: number;
+  /** Observed seq from the live stream when available. */
+  preferredSeq?: number;
+};
 
 export type SettlementProof = {
   matchId: string;
@@ -21,14 +36,18 @@ export type SettlementProof = {
   triggeringSignal: Signal;
   explorerUrl: string;
   mode: "anchor" | "memo";
+  /** Present when outcome was verified against TxLINE on-chain Merkle roots. */
+  txline?: TxlineValidationResult;
 };
 
 export type SettlerConfig = {
   rpcUrl: string;
   /** base58-encoded secret key. Required for settlement. */
   walletSecretKey?: string;
-  /** Deployed Anchor program id. Empty → Memo-program proof tx. */
+  /** Deployed Onside Anchor program id. Empty → Memo-program proof tx. */
   programId?: string;
+  /** When set, settlement first verifies the outcome via TxLINE validateStat. */
+  txline?: TxlineSettlementContext;
 };
 
 const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
@@ -39,12 +58,10 @@ export function proofHash(signal: Signal): Buffer {
   return createHash("sha256").update(JSON.stringify(signal)).digest();
 }
 
-/** Anchor instruction discriminator: first 8 bytes of sha256("global:settle_market"). */
 function anchorDiscriminator(ixName: string): Buffer {
   return createHash("sha256").update(`global:${ixName}`).digest().subarray(0, 8);
 }
 
-/** Borsh-encode args for settle_market(match_id: String, outcome: u8, proof_hash: [u8;32]). */
 function encodeSettleArgs(matchId: string, outcome: Outcome, hash: Buffer): Buffer {
   const idBytes = Buffer.from(matchId, "utf8");
   const lenPrefix = Buffer.alloc(4);
@@ -61,11 +78,11 @@ function encodeSettleArgs(matchId: string, outcome: Outcome, hash: Buffer): Buff
 /**
  * Signs and submits the settlement transaction to Solana devnet.
  *
- * Modes:
- *  - "anchor": wallet + programId → settle_market on the deployed program
- *  - "memo":   wallet only → Memo program tx with proof JSON (real, clickable)
+ * When `config.txline` is set, first runs TxLINE validateStat against the
+ * on-chain daily_scores_roots Merkle root, then embeds that verification in
+ * the settlement memo / proof hash input.
  *
- * Throws if no wallet is configured or the RPC submission fails.
+ * Throws if no wallet is configured, TxLINE validation fails, or RPC fails.
  * Never returns a fabricated / SIMULATED signature.
  */
 export async function settleOnChain(
@@ -75,7 +92,6 @@ export async function settleOnChain(
   triggeringSignal: Signal,
 ): Promise<SettlementProof> {
   const settledAt = new Date().toISOString();
-  const hash = proofHash(triggeringSignal);
 
   if (!config.walletSecretKey) {
     throw new Error(
@@ -92,6 +108,40 @@ export async function settleOnChain(
       `Agent wallet ${wallet.publicKey.toBase58()} is underfunded (${balance} lamports). Airdrop SOL on devnet and retry.`,
     );
   }
+
+  let txline: TxlineValidationResult | undefined;
+  if (config.txline) {
+    txline = await validateFinalOutcome({
+      auth: config.txline.auth,
+      rpcUrl: config.rpcUrl,
+      programId: config.txline.txlineProgramId,
+      wallet,
+      fixtureId: config.txline.fixtureId,
+      outcome,
+      preferredSeq: config.txline.preferredSeq,
+    });
+  }
+
+  // Hash includes TxLINE verification when present so settle_market / memo
+  // references the sponsor Merkle proof, not only our signal blob.
+  const hash = createHash("sha256")
+    .update(
+      JSON.stringify({
+        signal: triggeringSignal,
+        txline: txline
+          ? {
+              fixtureId: txline.fixtureId,
+              seq: txline.seq,
+              homeGoals: txline.homeGoals,
+              awayGoals: txline.awayGoals,
+              dailyScoresPda: txline.dailyScoresPda,
+              onChainViewPassed: txline.onChainViewPassed,
+              validationTxSignature: txline.validationTxSignature,
+            }
+          : null,
+      }),
+    )
+    .digest();
 
   let instruction: TransactionInstruction;
   let mode: SettlementProof["mode"];
@@ -113,14 +163,24 @@ export async function settleOnChain(
     });
     mode = "anchor";
   } else {
+    // Keep memo compact — large UTF-8 payloads burn Memo CU past the 200k default.
     const memo = JSON.stringify({
-      app: "onside-settling-agent",
+      app: "onside",
       matchId,
-      finalOutcome: outcome,
-      proofHash: hash.toString("hex"),
+      outcome,
+      proof: hash.toString("hex").slice(0, 32),
       rule: triggeringSignal.rule,
-      confidence: triggeringSignal.confidence,
-      settledAt,
+      at: settledAt,
+      txline: txline
+        ? {
+            ok: true,
+            method: txline.method,
+            fixture: txline.fixtureId,
+            seq: txline.seq,
+            score: `${txline.homeGoals}-${txline.awayGoals}`,
+            valTx: txline.validationTxSignature,
+          }
+        : undefined,
     });
     instruction = new TransactionInstruction({
       programId: MEMO_PROGRAM_ID,
@@ -130,7 +190,9 @@ export async function settleOnChain(
     mode = "memo";
   }
 
-  const tx = new Transaction().add(instruction);
+  const tx = new Transaction()
+    .add(ComputeBudgetProgram.setComputeUnitLimit({ units: 400_000 }))
+    .add(instruction);
   const txSignature = await sendAndConfirmTransaction(connection, tx, [wallet], {
     commitment: "confirmed",
   });
@@ -143,5 +205,6 @@ export async function settleOnChain(
     triggeringSignal,
     explorerUrl: `https://explorer.solana.com/tx/${txSignature}?cluster=devnet`,
     mode,
+    txline,
   };
 }
