@@ -67,7 +67,7 @@ export function createAgent(config: AgentConfig): SettlingAgent {
   Object.defineProperty(emitter, "meta", { value: source.meta, enumerable: true });
   Object.defineProperty(emitter, "state", { value: state, enumerable: true });
 
-  function decide(signal: Signal): void {
+  function decide(signal: Signal): Decision {
     const at = new Date().toISOString();
     let decision: Decision;
 
@@ -85,7 +85,7 @@ export function createAgent(config: AgentConfig): SettlingAgent {
     }
 
     state.decisions.push(decision);
-    emitter.emit("decision", decision);
+    return decision;
   }
 
   async function settle(signal: Signal): Promise<void> {
@@ -128,7 +128,7 @@ export function createAgent(config: AgentConfig): SettlingAgent {
       );
       state.settlement = "settled";
       state.proof = proof;
-      emitter.emit("narration", renderSettlement(signal, outcome, proof.txSignature, source.meta));
+      emitter.emit("settlement:line", renderSettlement(signal, outcome, proof.txSignature, source.meta));
       emitter.emit("settlement", proof);
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
@@ -140,11 +140,21 @@ export function createAgent(config: AgentConfig): SettlingAgent {
   }
 
   source.on("event", (event: MatchEvent) => {
-    emitter.emit("event", event);
+    // One tick per match event so Decision Log + Market Pulse update together.
+    const lines: NarrationLine[] = [];
+    const decisions: Decision[] = [];
+
     for (const signal of engine.evaluate(event)) {
-      emitter.emit("narration", render(signal, source.meta));
-      decide(signal);
+      const line = render(signal, source.meta);
+      lines.push(line);
+      decisions.push(decide(signal));
     }
+
+    // Legacy listeners (headless console): event, then narrations/decisions.
+    emitter.emit("event", event);
+    for (const line of lines) emitter.emit("narration", line);
+    for (const decision of decisions) emitter.emit("decision", decision);
+    emitter.emit("tick", { event, lines, decisions });
   });
   source.on("end", () => emitter.emit("end"));
   source.on("error", (err: Error) => emitter.emit("error", err));

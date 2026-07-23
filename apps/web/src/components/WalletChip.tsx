@@ -75,7 +75,7 @@ export function WalletChip() {
         className="inline-flex min-h-10 items-center gap-2 rounded-full border border-hairline bg-panel px-3 py-1.5 text-xs text-linesman"
         title={
           state.status === "error"
-            ? "Could not reach /api/wallet — check Vercel env AGENT_WALLET_SECRET_KEY"
+            ? "Could not reach /api/wallet — is the API running on :3001?"
             : label
         }
       >

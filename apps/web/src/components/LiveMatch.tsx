@@ -61,14 +61,24 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
           setSettleThreshold(msg.settleThreshold);
           setMatches(msg.matches);
           break;
-        case "event":
+        case "tick": {
+          // Single commit: Market Pulse + Decision Log paint on the same frame.
           setEvents((prev) => [...prev, msg.event]);
+          if (msg.lines.length > 0) {
+            setLines((prev) => [...prev, ...msg.lines]);
+          }
+          if (msg.decisions.length > 0) {
+            setDecisions((prev) => {
+              const next = { ...prev };
+              for (const d of msg.decisions) next[d.signalId] = d.action;
+              return next;
+            });
+          }
           break;
+        }
         case "narration":
+          // Settlement confirmation narration (after async settle).
           setLines((prev) => [...prev, msg.line]);
-          break;
-        case "decision":
-          setDecisions((prev) => ({ ...prev, [msg.signalId]: msg.action }));
           break;
         case "settlement:pending":
           setStatus("settling");

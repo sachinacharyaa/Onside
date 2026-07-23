@@ -56,11 +56,27 @@ export function handleStream(req: IncomingMessage, res: ServerResponse) {
     matches: listReplays(),
   });
 
-  agent.on("event", (event: MatchEvent) => send({ kind: "event", event }));
-  agent.on("narration", (line: NarrationLine) => send({ kind: "narration", line }));
-  agent.on("decision", (decision: Decision) =>
-    send({ kind: "decision", signalId: decision.signal.id, action: decision.action }),
+  // Batched per match event so Decision Log + Market Pulse update together.
+  // Do not also forward raw event/narration/decision — that would double-paint.
+  agent.on(
+    "tick",
+    ({
+      event,
+      lines,
+      decisions,
+    }: {
+      event: MatchEvent;
+      lines: NarrationLine[];
+      decisions: Decision[];
+    }) =>
+      send({
+        kind: "tick",
+        event,
+        lines,
+        decisions: decisions.map((d) => ({ signalId: d.signal.id, action: d.action })),
+      }),
   );
+  agent.on("settlement:line", (line: NarrationLine) => send({ kind: "narration", line }));
   agent.on("settlement:pending", ({ outcome }: { outcome: string }) =>
     send({ kind: "settlement:pending", outcome }),
   );

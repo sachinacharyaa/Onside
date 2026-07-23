@@ -16,9 +16,15 @@ export type StreamMessage =
       matchId: string;
       matches: MatchOption[];
     }
-  | { kind: "event"; event: MatchEvent }
+  /** One match event + any signals it produced — applied atomically in the UI. */
+  | {
+      kind: "tick";
+      event: MatchEvent;
+      lines: NarrationLine[];
+      decisions: { signalId: string; action: DecisionAction }[];
+    }
+  /** Post-settlement narration (and legacy frames). */
   | { kind: "narration"; line: NarrationLine }
-  | { kind: "decision"; signalId: string; action: DecisionAction }
   | { kind: "settlement:pending"; outcome: string }
   | { kind: "settlement"; proof: SettlementProof }
   | { kind: "settlement:failed"; outcome: string; message: string }

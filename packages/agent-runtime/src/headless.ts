@@ -51,6 +51,10 @@ agent.on("decision", (d: Decision) => {
   );
 });
 
+agent.on("settlement:line", (line: NarrationLine) => {
+  console.log(`      🗣  ${line.text}`);
+});
+
 agent.on("settlement", (proof: SettlementProof) => {
   console.log(`\n✅ SETTLED [${proof.mode}] outcome=${proof.finalOutcome} tx=${proof.txSignature}`);
   console.log(`   ${proof.explorerUrl}`);

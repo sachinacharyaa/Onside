@@ -5,14 +5,7 @@ const H = 230;
 const PAD = { top: 20, right: 14, bottom: 26, left: 40 };
 
 const implied = (odds: number) => 100 / odds;
-const scaleX = (minute: number) => PAD.left + (minute / 95) * (W - PAD.left - PAD.right);
 const scaleY = (prob: number) => PAD.top + (1 - prob / 100) * (H - PAD.top - PAD.bottom);
-
-function path(points: { minute: number; prob: number }[]): string {
-  return points
-    .map((p, i) => `${i === 0 ? "M" : "L"}${scaleX(p.minute).toFixed(1)},${scaleY(p.prob).toFixed(1)}`)
-    .join(" ");
-}
 
 /**
  * Supporting reference: implied win probability per side over match time.
@@ -21,6 +14,16 @@ function path(points: { minute: number; prob: number }[]): string {
  */
 export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: MatchMeta }) {
   const withOdds = events.filter((e) => e.odds);
+  const maxMinute = Math.max(95, ...events.map((e) => e.minute), 1);
+  const scaleXDyn = (minute: number) =>
+    PAD.left + (minute / maxMinute) * (W - PAD.left - PAD.right);
+  const pathDyn = (points: { minute: number; prob: number }[]): string =>
+    points
+      .map(
+        (p, i) =>
+          `${i === 0 ? "M" : "L"}${scaleXDyn(p.minute).toFixed(1)},${scaleY(p.prob).toFixed(1)}`,
+      )
+      .join(" ");
   const home = withOdds.map((e) => ({ minute: e.minute, prob: implied(e.odds!.home) }));
   const away = withOdds.map((e) => ({ minute: e.minute, prob: implied(e.odds!.away) }));
   const draw = withOdds
@@ -74,10 +77,12 @@ export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: Matc
             </text>
           </g>
         ))}
-        {[0, 15, 30, 45, 60, 75, 90].map((m) => (
+        {[0, 15, 30, 45, 60, 75, 90]
+          .concat(maxMinute > 95 ? [105, 120].filter((m) => m <= maxMinute) : [])
+          .map((m) => (
           <text
             key={m}
-            x={scaleX(m)}
+            x={scaleXDyn(m)}
             y={H - 8}
             textAnchor="middle"
             fontSize={10}
@@ -90,8 +95,8 @@ export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: Matc
         {markers.map((e, i) => (
           <g key={i}>
             <line
-              x1={scaleX(e.minute)}
-              x2={scaleX(e.minute)}
+              x1={scaleXDyn(e.minute)}
+              x2={scaleXDyn(e.minute)}
               y1={PAD.top - 2}
               y2={H - PAD.bottom}
               stroke={e.type === "goal" ? "var(--color-caution)" : "var(--color-whistle)"}
@@ -99,20 +104,20 @@ export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: Matc
               strokeDasharray="3 3"
             />
             <rect
-              x={scaleX(e.minute) - 3}
+              x={scaleXDyn(e.minute) - 3}
               y={PAD.top - 12}
               width={6}
               height={9}
               rx={1}
               fill={e.type === "goal" ? "var(--color-caution)" : "var(--color-whistle)"}
-              transform={`rotate(6 ${scaleX(e.minute)} ${PAD.top - 8})`}
+              transform={`rotate(6 ${scaleXDyn(e.minute)} ${PAD.top - 8})`}
             />
           </g>
         ))}
 
         {draw.length > 1 && (
           <path
-            d={path(draw)}
+            d={pathDyn(draw)}
             fill="none"
             stroke="var(--color-linesman)"
             strokeWidth={1.5}
@@ -120,10 +125,10 @@ export function MarketPulse({ events, meta }: { events: MatchEvent[]; meta: Matc
           />
         )}
         {away.length > 1 && (
-          <path d={path(away)} fill="none" stroke="var(--color-whistle)" strokeWidth={2} />
+          <path d={pathDyn(away)} fill="none" stroke="var(--color-whistle)" strokeWidth={2} />
         )}
         {home.length > 1 && (
-          <path d={path(home)} fill="none" stroke="var(--color-turf)" strokeWidth={2.5} />
+          <path d={pathDyn(home)} fill="none" stroke="var(--color-turf)" strokeWidth={2.5} />
         )}
       </svg>
     </section>
