@@ -25,7 +25,7 @@ export function handleStream(req: IncomingMessage, res: ServerResponse) {
     config.replayFile = selected.file;
     config.useReplayMode = true;
   }
-  const matchId = selected?.id ?? (config.useReplayMode ? "txline-18257865" : "live");
+  const matchId = selected?.id ?? (config.useReplayMode ? "txline-18257739" : "live");
   const agent = createAgent(config);
 
   res.writeHead(200, {

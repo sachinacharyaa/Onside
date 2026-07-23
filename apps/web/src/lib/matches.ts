@@ -15,6 +15,8 @@ export type FeaturedMatch = {
   awayLean: number;
   poster: string;
   posterCredit: string;
+  /** Spotlight the World Cup Final (glow / pulse on landing list). */
+  highlight?: boolean;
 };
 
 /** Upcoming fixture — real metadata only, never mixed into the replay grid. */
@@ -42,12 +44,28 @@ function formatCardDate(iso: string): string {
 export { formatCardDate };
 
 /**
- * Three real finished TxLINE fixtures, most recent first.
- * Note: only 18257865 (18 Jul) falls inside a strict 3-day window from
- * 19 Jul 2026; 15 Jul + 14 Jul semis are the next most recent finalised WC
- * matches still inside TxLINE historical retention.
+ * Finished fixtures for the landing grid, most recent first.
+ * World Cup Final leads; three knockout replays follow.
  */
 export const FEATURED: FeaturedMatch[] = [
+  {
+    id: "txline-18257739",
+    fixtureId: 18257739,
+    home: "Spain",
+    away: "Argentina",
+    competition: "World Cup 2026, Final",
+    kickoffIso: "2026-07-19T19:00:00.000Z",
+    finalScore: "1-0",
+    blurb:
+      "Ferran Torres at 106' — Spain world champions after extra time. Ten-man Argentina, full decision log through full-time.",
+    tag: "World Cup Final",
+    accent: "caution",
+    homeLean: 56,
+    awayLean: 44,
+    poster: "/brand/matches/esp-arg.jpg",
+    posterCredit: "Stadium night · Commons",
+    highlight: true,
+  },
   {
     id: "txline-18257865",
     fixtureId: 18257865,
@@ -100,15 +118,3 @@ export const FEATURED: FeaturedMatch[] = [
     posterCredit: "Stade de France night match (Commons)",
   },
 ];
-
-/** Next covered fixture — Spain vs Argentina Final (not a replay). */
-export const NEXT_FIXTURE: UpcomingFixture = {
-  fixtureId: 18257739,
-  home: "Spain",
-  away: "Argentina",
-  competition: "World Cup 2026, Final",
-  kickoffIso: "2026-07-19T19:00:00.000Z",
-  // Real StablePrice demargined 1X2 from /api/odds/snapshot/18257739 (full match).
-  odds: { home: 2.38, draw: 3.18, away: 3.76 },
-  poster: "/brand/matches/esp-arg.jpg",
-};

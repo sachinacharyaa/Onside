@@ -1,5 +1,6 @@
 import type { ReplayFile } from "./replay-client.js";
 import type { MatchMeta } from "./types.js";
+import espArgFinal from "../replay-data/txline-18257739.json";
 import fraEng3rd from "../replay-data/txline-18257865.json";
 import engArgSf from "../replay-data/txline-18241006.json";
 import fraEspSf from "../replay-data/txline-18237038.json";
@@ -12,10 +13,15 @@ export type ReplayEntry = {
 };
 
 /**
- * Real TxLINE-recorded finished fixtures for the demo UI, most recent first.
+ * Finished fixtures for the demo UI, most recent first.
  * Static JSON imports are inlined by the Vercel stream esbuild bundle.
  */
 export const replayRegistry: ReplayEntry[] = [
+  {
+    id: "txline-18257739",
+    file: "txline-18257739.json",
+    replay: espArgFinal as unknown as ReplayFile,
+  },
   {
     id: "txline-18257865",
     file: "txline-18257865.json",

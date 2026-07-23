@@ -9,10 +9,9 @@ import {
   IconWhistleCall,
   MatchCrest,
 } from "@/components/LandingIcons";
-import { NextFixtureCard } from "@/components/NextFixtureCard";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { FEATURED, NEXT_FIXTURE, formatCardDate } from "@/lib/matches";
+import { FEATURED, formatCardDate } from "@/lib/matches";
 
 /**
  * One continuous landing composition — no section borders.
@@ -75,10 +74,14 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Featured match — real match photo background */}
+            {/* Featured match — World Cup Final spotlight */}
             <Link
               to={`/live?match=${hero.id}`}
-              className="hero-rise-delay group relative block min-h-[22rem] overflow-hidden rounded-3xl shadow-[0_24px_80px_rgba(0,0,0,0.45)] ring-1 ring-white/10 transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turf sm:min-h-[26rem]"
+              className={`hero-rise-delay group relative block min-h-[22rem] overflow-hidden rounded-3xl ring-1 transition-transform hover:scale-[1.01] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-turf sm:min-h-[26rem] ${
+                hero.highlight
+                  ? "final-spotlight final-shimmer ring-caution/60"
+                  : "shadow-[0_24px_80px_rgba(0,0,0,0.45)] ring-white/10"
+              }`}
             >
               <img
                 src={hero.poster}
@@ -94,17 +97,28 @@ export function HomePage() {
                 aria-hidden
               />
 
-              <div className="relative flex h-full min-h-[22rem] flex-col justify-between p-6 sm:min-h-[26rem] sm:p-8">
+              <div className="relative z-[2] flex h-full min-h-[22rem] flex-col justify-between p-6 sm:min-h-[26rem] sm:p-8">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-sm font-medium tracking-wide text-turf drop-shadow">
-                      {hero.tag}
-                    </p>
-                    <p className="mt-1 text-sm text-white/75 drop-shadow">
+                    {hero.highlight ? (
+                      <span className="final-badge-pulse inline-flex items-center rounded-full border border-caution/60 bg-caution/20 px-3 py-1 text-sm font-medium tracking-wide text-caution drop-shadow">
+                        {hero.tag}
+                      </span>
+                    ) : (
+                      <p className="text-sm font-medium tracking-wide text-turf drop-shadow">
+                        {hero.tag}
+                      </p>
+                    )}
+                    <p className="mt-2 text-sm text-white/75 drop-shadow">
                       {formatCardDate(hero.kickoffIso)} · {hero.competition}
                     </p>
-                    <p className="mt-1 font-display text-lg font-semibold text-white/90 drop-shadow">
+                    <p className="mt-1 font-display text-lg font-semibold text-caution drop-shadow">
                       FT {hero.finalScore}
+                      {hero.highlight ? (
+                        <span className="ml-2 text-sm font-medium tracking-wide text-white/70">
+                          AET
+                        </span>
+                      ) : null}
                     </p>
                   </div>
                   <MatchCrest
@@ -170,39 +184,32 @@ export function HomePage() {
             </ol>
           </div>
 
-          {/* Next real fixture — not a replay */}
-          <div className="mt-20 sm:mt-28">
-            <p className="text-sm font-medium tracking-wide text-caution">Coming up</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold leading-snug tracking-tight">
-              Next fixture on TxLINE
-            </h2>
-            <div className="mt-8">
-              <NextFixtureCard fixture={NEXT_FIXTURE} />
-            </div>
-          </div>
-
-          {/* Match picker — recorded finished fixtures only */}
+          {/* Match picker — finished fixtures, Final spotlighted */}
           <div className="mt-20 sm:mt-28">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="text-sm font-medium tracking-wide text-linesman">Choose a replay</p>
                 <h2 className="mt-2 font-display text-3xl font-semibold leading-snug tracking-tight">
-                  Three finished World Cup matches
+                  Four finished World Cup matches
                 </h2>
                 <p className="mt-2 max-w-xl text-sm leading-relaxed text-linesman">
-                  Real TxLINE historical feeds, most recent first. Each settles with Merkle
-                  validation on the fixture&apos;s final seq.
+                  Spain are champions. Start with the Final, or open any knockout replay — most
+                  recent first.
                 </p>
               </div>
               <IconBall className="h-12 w-12 text-turf/40" />
             </div>
 
-            <ul className="mt-10 grid gap-8 sm:grid-cols-3">
+            <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {FEATURED.map((m) => (
-                <li key={m.id}>
+                <li key={m.id} className={m.highlight ? "sm:col-span-2 lg:col-span-2" : undefined}>
                   <Link
                     to={`/live?match=${m.id}`}
-                    className="group relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-3xl transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf"
+                    className={`group relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-3xl transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-turf ${
+                      m.highlight
+                        ? "final-spotlight final-shimmer min-h-[20rem] ring-1 ring-caution/50"
+                        : ""
+                    }`}
                   >
                     <img
                       src={m.poster}
@@ -218,7 +225,12 @@ export function HomePage() {
                       aria-hidden
                     />
 
-                    <div className="relative flex h-full flex-col p-6">
+                    <div className="relative z-[2] flex h-full flex-col p-6">
+                      {m.highlight ? (
+                        <span className="final-badge-pulse mb-2 inline-flex w-fit items-center rounded-full border border-caution/60 bg-caution/25 px-3 py-1 text-xs font-medium tracking-wide text-caution drop-shadow">
+                          {m.tag}
+                        </span>
+                      ) : null}
                       <p className="text-sm font-medium tracking-wide text-white/80 drop-shadow">
                         {formatCardDate(m.kickoffIso)}
                       </p>
@@ -233,13 +245,22 @@ export function HomePage() {
                       >
                         {m.competition}
                       </p>
-                      <h3 className="mt-auto font-display text-2xl font-semibold leading-snug tracking-tight text-white drop-shadow">
+                      <h3
+                        className={`mt-auto font-display font-semibold leading-snug tracking-tight text-white drop-shadow ${
+                          m.highlight ? "text-3xl" : "text-2xl"
+                        }`}
+                      >
                         {m.home}
                         <span className="mx-1.5 text-white/50">vs</span>
                         {m.away}
                       </h3>
                       <p className="mt-2 font-display text-lg font-semibold text-caution drop-shadow">
                         FT {m.finalScore}
+                        {m.highlight ? (
+                          <span className="ml-2 text-sm font-medium tracking-wide text-white/65">
+                            AET
+                          </span>
+                        ) : null}
                       </p>
                       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/85 drop-shadow">
                         {m.blurb}

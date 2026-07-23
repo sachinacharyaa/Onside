@@ -88,3 +88,63 @@ h4 {
     transform: translateY(0);
   }
 }
+
+@keyframes final-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-caution) 55%, transparent),
+      0 0 28px color-mix(in srgb, var(--color-caution) 35%, transparent),
+      0 24px 80px rgba(0, 0, 0, 0.45);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-caution) 80%, transparent),
+      0 0 48px color-mix(in srgb, var(--color-caution) 55%, transparent),
+      0 24px 80px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@keyframes final-shimmer {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-12deg);
+  }
+}
+
+@keyframes final-badge-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .final-spotlight {
+    animation: final-glow 2.8s ease-in-out infinite;
+  }
+  .final-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      color-mix(in srgb, var(--color-caution) 28%, transparent) 50%,
+      transparent 60%
+    );
+    animation: final-shimmer 4.5s ease-in-out infinite;
+  }
+  .final-badge-pulse {
+    animation: final-badge-pulse 2.2s ease-in-out infinite;
+  }
+}

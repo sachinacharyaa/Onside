@@ -49,7 +49,7 @@ const TXLINE_ENDPOINTS = [
   {
     method: "GET",
     path: "/api/odds/snapshot/{fixtureId}",
-    use: "Pre-match and in-play StablePrice 1X2 lines (e.g. next-fixture odds)",
+    use: "Pre-match and in-play StablePrice 1X2 lines across covered fixtures",
   },
   {
     method: "GET",
@@ -93,7 +93,7 @@ const HIGHLIGHTS = [
   },
   {
     label: "Demo-ready",
-    body: "Three finished World Cup replays plus an honest next-fixture card (metadata + odds only).",
+    body: "Four finished World Cup replays, led by the Spain vs Argentina Final.",
   },
 ] as const;
 

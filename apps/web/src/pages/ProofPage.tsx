@@ -85,7 +85,7 @@ export function ProofPage() {
                 settles, this page shows both the Merkle verification and the Explorer link.
               </p>
               <Link
-                to="/live?match=txline-18257865"
+                to="/live?match=txline-18257739"
                 className="mt-6 inline-flex min-h-12 items-center rounded-full bg-turf px-6 py-3 text-sm font-semibold text-chalk hover:opacity-90"
               >
                 Open live stage →
