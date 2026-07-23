@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { MatchEvent, MatchMeta } from "@onside/ingestion";
 import type { NarrationLine } from "@onside/narration-engine";
@@ -40,6 +40,8 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
   const [proof, setProof] = useState<SettlementProof | null>(null);
   const [settleError, setSettleError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  /** Odds-only ticks hold here until a narration arrives — keeps pulse + log in lockstep. */
+  const pendingEventsRef = useRef<MatchEvent[]>([]);
 
   useEffect(() => {
     setMeta(FALLBACK_META);
@@ -50,6 +52,14 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
     setProof(null);
     setSettleError(null);
     setDone(false);
+    pendingEventsRef.current = [];
+
+    const flushPendingEvents = () => {
+      const pending = pendingEventsRef.current;
+      if (pending.length === 0) return;
+      pendingEventsRef.current = [];
+      setEvents((prev) => [...prev, ...pending]);
+    };
 
     const source = new EventSource(`/api/stream?match=${encodeURIComponent(matchId)}`);
     source.onmessage = (e) => {
@@ -62,11 +72,15 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
           setMatches(msg.matches);
           break;
         case "tick": {
-          // Single commit: Market Pulse + Decision Log paint on the same frame.
-          setEvents((prev) => [...prev, msg.event]);
-          if (msg.lines.length > 0) {
-            setLines((prev) => [...prev, ...msg.lines]);
-          }
+          pendingEventsRef.current.push(msg.event);
+
+          // Hold Market Pulse on silent odds ticks so it doesn't run ahead of the log.
+          if (msg.lines.length === 0 && msg.decisions.length === 0) break;
+
+          const batch = pendingEventsRef.current;
+          pendingEventsRef.current = [];
+          setEvents((prev) => [...prev, ...batch]);
+          setLines((prev) => [...prev, ...msg.lines]);
           if (msg.decisions.length > 0) {
             setDecisions((prev) => {
               const next = { ...prev };
@@ -78,6 +92,7 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
         }
         case "narration":
           // Settlement confirmation narration (after async settle).
+          flushPendingEvents();
           setLines((prev) => [...prev, msg.line]);
           break;
         case "settlement:pending":
@@ -85,6 +100,7 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
           setSettleError(null);
           break;
         case "settlement":
+          flushPendingEvents();
           setStatus("settled");
           setProof(msg.proof);
           setSettleError(null);
@@ -97,12 +113,14 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
           source.close();
           break;
         case "settlement:failed":
+          flushPendingEvents();
           setStatus("failed");
           setSettleError(msg.message);
           setDone(true);
           source.close();
           break;
         case "end":
+          flushPendingEvents();
           setDone(true);
           source.close();
           break;
