@@ -74,8 +74,10 @@ export function LiveMatch({ initialMatchId = "txline-18257739" }: { initialMatch
         case "tick": {
           pendingEventsRef.current.push(msg.event);
 
-          // Hold Market Pulse on silent odds ticks so it doesn't run ahead of the log.
-          if (msg.lines.length === 0 && msg.decisions.length === 0) break;
+          // Hold silent odds ticks so pulse doesn't run ahead of the log.
+          // Kickoff always flushes so the stage isn't blank for the first seconds.
+          const isKickoff = msg.event.type === "kickoff";
+          if (msg.lines.length === 0 && msg.decisions.length === 0 && !isKickoff) break;
 
           const batch = pendingEventsRef.current;
           pendingEventsRef.current = [];

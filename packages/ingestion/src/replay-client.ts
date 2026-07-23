@@ -20,7 +20,7 @@ export type ReplayClientOptions = {
   speed?: number;
   /** Floor gap between events under speed mode. Default 40ms. */
   minGapMs?: number;
-  /** Cap gap between events under speed mode. Default 8000ms. */
+  /** Cap gap between events under speed mode. Default 1500ms. */
   maxGapMs?: number;
 };
 
@@ -57,7 +57,7 @@ export class ReplayClient extends EventEmitter implements MatchEventSource {
     this.intervalMs = opts.intervalMs ?? 1500;
     this.speed = opts.speed ?? 0;
     this.minGapMs = opts.minGapMs ?? 40;
-    this.maxGapMs = opts.maxGapMs ?? 8000;
+    this.maxGapMs = opts.maxGapMs ?? 1500;
     this.normalizer = {
       lastScoreSeq: replay.meta.finalSeq ?? null,
     };
