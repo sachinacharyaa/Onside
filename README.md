@@ -1,129 +1,204 @@
-# Onside — Settling Agent
+# Onside — Autonomous Settling Agent
 
-Autonomous, rule-based trading agent for live World Cup markets (Track 3: Trading Tools and Agents).
+Onside is a deterministic, explainable agent for live football markets. It watches a match, evaluates explicit rules, narrates its own decisions in plain language, and can settle a market on Solana using real match evidence and on-chain proof.
 
-The agent watches a single live football match, makes **deterministic** (no ML, no LLM) trading decisions from explicit, inspectable rules, narrates every decision in plain language as it happens, and settles its own market on Solana devnet using match data as proof — zero human input during operation.
+The core thesis is simple: every decision should be inspectable. Instead of relying on a black-box model, Onside makes its reasoning visible, auditable, and reproducible.
 
-> Every other agent is a black box that trades. Ours shows its work — every action traces to an explicit rule and real match data, and it proves its own outcome on-chain instead of asking anyone to trust it.
+> The product is designed for transparency first: no hidden model logic, no mysterious trading behavior, and no trust-based settlement.
+
+---
+
+## What we have right now
+
+Onside already combines the core building blocks of a live, demo-ready autonomous agent:
+
+- A polished web experience for landing, live match viewing, rule exploration, and proof review
+- A deterministic signal engine with named rules such as odds swings, score changes, and time-decay mismatches
+- A narration layer that translates signals into human-readable commentary in real time
+- An agent runtime that connects ingestion, signal evaluation, narration, decisioning, and settlement
+- Settlement support for Solana devnet with multiple fallback modes: anchored settlement, memo-based proof, and simulated settlement for demos
+- TxLINE-backed replay and live-mode support, with a proof page that highlights both the data verification and the settlement transaction
+
+This makes Onside more than a concept prototype: it is a compact, end-to-end system that can be shown, tested, and improved in a live demo.
+
+---
+
+## Product vision
+
+Onside exists at the intersection of three ideas:
+
+1. Trust through transparency
+   - The agent does not hide its logic behind an opaque model.
+   - Every signal, confidence score, and settlement step can be traced.
+
+2. Deterministic autonomy
+   - The system is rule-based and inspectable.
+   - It is designed to operate without LLM-style generation in the decision path.
+
+3. Verifiable on-chain proof
+   - The final outcome is not only declared by the agent.
+   - It is backed by external match evidence and an on-chain settlement record.
+
+This makes Onside a strong candidate for research, demo, and grant narratives around explainable automation, verifiable AI-adjacent systems, and transparent market infrastructure.
+
+---
+
+## Current system architecture
+
+```mermaid
+flowchart TD
+    A[TxLINE Feed or Replay Data] --> B[Ingestion Layer]
+    B --> C[Signal Engine]
+    C --> D[Narration Engine]
+    C --> E[Decision Layer]
+    D --> F[Live Web UI]
+    E --> G[Settlement Layer]
+    G --> H[Solana Proof / Explorer]
+    F --> I[Decision Log + Rulebook + Proof Page]
+```
+
+### Architectural layers
+
+- Ingestion: normalizes live or replay match events into a shared event model
+- Signal Engine: evaluates deterministic rules and produces confidence-scored signals
+- Narration Engine: converts signals into readable commentary for users and judges
+- Decision Layer: decides whether to note, open, hold, or settle based on confidence thresholds
+- Settlement Layer: submits proof and settlement data to Solana devnet, with graceful fallback modes
+
+---
+
+## Repository structure
+
+| Area | Purpose |
+| --- | --- |
+| apps/web | Vite + React interface for the landing page, live stage, rulebook, and proof page |
+| packages/ingestion | Replay and TxLINE ingestion adapters behind a shared event interface |
+| packages/signal-engine | Deterministic rules and config-driven confidence scoring |
+| packages/narration-engine | Template-based narration generation |
+| packages/agent-runtime | Orchestrator for ingest → evaluate → narrate → decide → settle |
+| packages/settlement | Solana settlement flow, wallet handling, and proof generation |
+| packages/txline-setup | TxLINE onboarding, fixture discovery, and replay capture helpers |
+
+---
+
+## What is implemented today
+
+### Core features
+
+- Live-style match experience with replayable fixtures
+- Rule-based signal evaluation with confidence scores
+- Plain-language narration stream
+- Settlement proof page for demo and audit purposes
+- Solana devnet settlement modes:
+  - anchored settlement when a program is configured
+  - memo-based proof fallback
+  - simulated mode for fully offline or demo-safe execution
+
+
 
 ## Quick start
 
 ```bash
 npm install
-cp .env.example .env        # defaults work out of the box (replay + simulated settlement)
+cp .env.example .env
 
-# Phase 1 milestone — full pipeline headless in the console
+# Headless demo pipeline
 npm run demo:headless
 
-# Phase 2+ — Vite React UI + API (fast HMR)
+# Web experience
 npm run dev
 ```
 
-Open http://localhost:5173 — home shows match posters; **Watch agent** opens the live stage. Vite serves the UI; a lightweight Node API on `:3001` streams agent events (proxied as `/api/*`).
+Open the local app in the browser and navigate to the live stage to view the agent in action.
 
-## Architecture
+---
 
-```
-TxLINE feed / replay ─▶ Signal Engine ─▶ Narration Engine ─▶ Live Feed UI (SSE)
-      (ingestion)        (rules, no ML)   (templates, no ML)
-                              │
-                              ▼
-                       Decision Layer ─▶ On-chain Settler (Solana devnet)
-```
+## Environment and configuration
 
-| Package | Role |
+Key environment variables include:
+
+| Variable | Purpose |
 | --- | --- |
-| `packages/ingestion` | `ReplayClient` + `TxlineClient` (real TxLINE/txodds SSE feed) behind one `MatchEventSource` interface — live vs. replay is a config flip |
-| `packages/txline-setup` | TxLINE World Cup free-tier onboarding: on-chain `subscribe`, API token activation, fixture listing, historical match recorder |
-| `packages/signal-engine` | 3 deterministic rules (`ODDS_SWING`, `SCORE_CHANGE`, `TIME_DECAY_MISMATCH`); **all thresholds live in `rules.config.ts`** |
-| `packages/narration-engine` | Pure template interpolation; **all sentences live in `templates.ts`** |
-| `packages/agent-runtime` | Orchestrates ingest → evaluate → narrate → decide → settle; logs every decision |
-| `packages/settlement` | Signs & submits the settlement tx; Anchor program source in `anchor-program/` |
-| `apps/web` | Next.js live feed: odds chart, narration feed, rules panel, settlement card |
+| USE_REPLAY_MODE | Switch between replay data and live TxLINE mode |
+| TXLINE_API_URL | TxLINE API endpoint |
+| TXLINE_API_TOKEN | Auth token for live data access |
+| TXLINE_FIXTURE_ID | Fixture to follow when running live |
+| REPLAY_FILE | Alternate replay source |
+| REPLAY_SPEED | Speeds up replay playback for demos |
+| CONFIDENCE_SETTLE_THRESHOLD | Threshold for triggering settlement decisions |
+| SOLANA_RPC_URL | Solana RPC endpoint |
+| AGENT_WALLET_SECRET_KEY | Wallet used for real settlement transactions |
+| ANCHOR_PROGRAM_ID | Optional on-chain program to use for anchored settlement |
 
-## On-chain settlement modes
+---
 
-The settler degrades gracefully so a demo can never dead-end:
+## Current rules
 
-1. **anchor** — `AGENT_WALLET_SECRET_KEY` + `ANCHOR_PROGRAM_ID` set: calls `settle_market(matchId, outcome, proofHash)` on the deployed Anchor program (PDA per match, settle-once enforced).
-2. **memo** — wallet set, no program id: submits a Memo transaction carrying the proof JSON. Still a real, clickable devnet Explorer link.
-3. **simulated** — no wallet: deterministic fake signature, UI still completes.
+The system uses auditable rules with deterministic confidence scoring:
 
-Setup:
-
-```bash
-npm run wallet:generate                              # prints keypair for .env, tries a faucet airdrop
-npx tsx packages/settlement/src/check-balance.ts     # verify/refund the wallet (faucet.solana.com if rate-limited)
-```
-
-To deploy the Anchor program see `packages/settlement/anchor-program/README.md`.
-
-## Real TxLINE data (Phase 4)
-
-Onside runs on [TxLINE by txodds](https://txline.txodds.com) — the World Cup free tier is free (no TxL), but the on-chain `subscribe` transaction needs devnet SOL on the agent wallet.
-
-```bash
-npm run txline:subscribe            # subscribe on-chain + activate API token (auto-writes .env)
-npm run txline:fixtures             # list covered fixtures, pick an id
-
-# go live:            USE_REPLAY_MODE=false + TXLINE_FIXTURE_ID=<id> in .env
-# or record a real finished match (6h–2wk old) into the replay path:
-npm run txline:record -- <fixtureId>   # WRITE_SAMPLE=1 also refreshes sample-match.json
-```
-
-The live client authenticates (guest JWT + activated API token), consumes the `/api/scores/stream` and `/api/odds/stream` SSE feeds, and normalizes TxLINE records (soccer game phases, `game_finalised`, StablePrice 1X2 lines) into the same `MatchEvent` schema the replay uses — downstream code is untouched. Details in `packages/txline-setup/README.md`.
-
-## Configuration (`.env`)
-
-| Variable | Default | Purpose |
+| Rule | Trigger | Notes |
 | --- | --- | --- |
-| `USE_REPLAY_MODE` | `true` | `false` (+ token & fixture id) switches to the live TxLINE adapter |
-| `TXLINE_NETWORK` | `devnet` | Selects the TxLINE host/program set (`devnet` / `mainnet`) |
-| `TXLINE_API_URL` | devnet host | TxLINE API origin (written by `txline:subscribe`) |
-| `TXLINE_API_TOKEN` | empty | Activated API token (written by `txline:subscribe`) |
-| `TXLINE_FIXTURE_ID` | empty | Fixture to follow live (from `txline:fixtures`) |
-| `REPLAY_FILE` | empty | Alternate replay file, e.g. `txline-<id>.json` from `txline:record` |
-| `REPLAY_SPEED` | unset | Compress real timestamps (e.g. `60` ≈ 2 min for a full match) |
-| `REPLAY_INTERVAL_MS` | `1500` | Fixed gap when `REPLAY_SPEED` is unset / 0 |
-| `CONFIDENCE_SETTLE_THRESHOLD` | `80` | Signals at/above this confidence trigger actions |
-| `SOLANA_RPC_URL` | devnet | RPC endpoint |
-| `AGENT_WALLET_SECRET_KEY` | empty | base58 devnet keypair; empty = simulated settlement |
-| `ANCHOR_PROGRAM_ID` | empty | deployed program id; empty = Memo-proof fallback |
+| ODDS_SWING | Sharp odds movement | Confidence scales with observed movement |
+| SCORE_CHANGE | Goal, red card, full-time outcome | Strong signals tied to real match events |
+| TIME_DECAY_MISMATCH | Odds diverge from expected decay patterns | Useful for showing explainable market behavior |
 
-## The rules (auditable before it trades)
+These thresholds are intended to remain transparent and easy to tune in one place.
 
-| Rule | Trigger | Confidence |
-| --- | --- | --- |
-| `ODDS_SWING` | home implied probability moves ≥ 4pts between ticks | `min(100, |Δ| × 8)` |
-| `SCORE_CHANGE` | goal / red card / full-time | goal 90 · red card 70 · FT 100 |
-| `TIME_DECAY_MISMATCH` | leader's price diverges ≥ 8pts from expected decay curve | `min(100, deviation × 10)` |
+---
 
-Deltas are implied-probability percentage points (`100 / decimalOdds`). Change them in one place: `packages/signal-engine/src/rules.config.ts`.
+## Future vision: grant-ready and research-friendly
 
-## Deploy on Vercel
+The next step is to position Onside not only as a demo agent, but as a platform for explainable, verifiable automation.
 
-The UI is a Vite SPA; `/api/*` runs as Node serverless functions (SSE stream included).
+### Longer-term direction
 
-1. Push this repo to GitHub, then [Import](https://vercel.com/new) it in Vercel (Root Directory = repo root — leave blank).
-2. `vercel.json` already sets install/build/output. Do **not** set Root Directory to `apps/web` or the API folder will be skipped.
-3. Add Environment Variables (Production + Preview) from `.env.example`. Minimum for a working demo:
-   - `USE_REPLAY_MODE=true`
-   - `REPLAY_SPEED=120` (Hobby ~60s limit) or `60` on Pro
-   - `AGENT_WALLET_SECRET_KEY` (funded devnet key) for real settlement txs
-   - Optional: `TXLINE_*` only if you flip to live mode
-4. Deploy. Open the `.vercel.app` URL — home, live stage (`/live`), and `/api/wallet` should work.
+- Expand from a single-match demo to a broader market-monitoring framework
+- Add richer proof pipelines that combine match data, event provenance, and settlement attestations
+- Formalize the rule engine as a policy layer that can be audited and compared over time
+- Build stronger benchmarking and replay tooling for evaluation and reproducibility
+- Create public documentation and open artifacts that make the system attractive for grants, academic partnerships, and ecosystem demos
 
-CLI alternative from the repo root:
+### Why this is compelling for grants
 
-```bash
-npx vercel          # preview
-npx vercel --prod   # production
-```
+The strongest narrative is not simply “we built an agent.” It is:
 
-## Demo script (2 minutes)
+- We built a transparent autonomous system
+- It is deterministic, auditable, and explainable
+- It uses real-world data and produces on-chain proof
+- It demonstrates a practical bridge between market logic, public infrastructure, and verifiable automation
 
-1. **0:00** — "This agent watches a live match, decides autonomously using explicit rules — no AI black box — and settles its own market on-chain."
-2. **0:15** — Point at the Rules panel: exact live thresholds, auditable before it trades.
-3. **0:45** — A goal fires: narration line + confidence badge appear, chart jumps. Narrate it as it narrates itself.
-4. **1:30** — Full time: settlement card flips to SETTLED, click the Explorer link.
-5. **1:50** — "Every decision traces to a rule and real match data — nothing hidden, nothing hallucinated."
+That story fits well with themes around trustworthy automation, open infrastructure, and accountable decision systems.
+
+---
+
+## What we can make better next
+
+To make the product stronger, more credible, and more demo-ready, the following improvements are the highest priority:
+
+1. Stronger UX for explainability
+   - Show the exact rule fired, the confidence score, and the supporting event in a more immersive panel
+   - Make the live stage feel more like an operational control room
+
+2. More robust settlement evidence
+   - Add richer proof objects for each settlement outcome
+   - Improve the trail between match evidence, rule trigger, and on-chain record
+
+3. Better replay and benchmarking infrastructure
+   - Add a larger fixture library and standardized evaluation harnesses
+   - Make replay runs easier to compare and present to reviewers
+
+4. Stronger production-grade resilience
+   - Improve error handling, reconnect behavior, and fallback flows
+   - Add more graceful degradation when live data or settlement services are unavailable
+
+5. Better ecosystem positioning
+   - Package the project for easier external review
+   - Add a public-facing architecture note and a clearer “why this matters” narrative for investors, partners, and grant reviewers
+
+---
+
+## Deployment notes
+
+The web app is designed to run locally and can also be deployed to Vercel or a similar platform. The repository already includes the necessary build and runtime wiring for the web experience and API layer.
+
+---
