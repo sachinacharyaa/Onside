@@ -12,8 +12,12 @@ export const templates = {
   GOAL: "GOAL — {player} scores for {team} at {minute}' ({scoreHome}-{scoreAway}) → confidence {confidence}% → action: {action}",
   RED_CARD:
     "RED CARD — {player} ({team}) sent off at {minute}' → confidence {confidence}% → action: {action}",
+  YELLOW_CARD:
+    "Yellow — {player} ({team}) at {minute}' → noted (below action threshold)",
   ODDS_SWING:
     "Odds swing at {minute}' — home {from} → {to} (Δ{delta}pts implied) → confidence {confidence}% → action: {action}",
+  MARKET_TICK:
+    "{minute}' — markets {from} / {draw} / {to} → watching",
   TIME_DECAY:
     "Odds diverging from expected decay curve at {minute}' — leader priced {to} vs expected {expected} ({delta}pts off) → confidence {confidence}% → action: {action}",
   FULLTIME:

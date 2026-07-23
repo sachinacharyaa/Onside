@@ -22,10 +22,14 @@ function pickTemplate(signal: Signal): TemplateKey {
   if (event.type === "kickoff") return "KICKOFF";
   if (signal.rule === "SCORE_CHANGE") {
     if (event.type === "goal") return "GOAL";
+    if (event.type === "card" && event.card === "yellow") return "YELLOW_CARD";
     if (event.type === "card") return "RED_CARD";
     if (event.type === "fulltime") return "FULLTIME";
   }
   if (signal.rule === "TIME_DECAY_MISMATCH") return "TIME_DECAY";
+  if (signal.rule === "ODDS_SWING" && signal.confidence === 0 && signal.suggestedAction === "HOLD") {
+    return "MARKET_TICK";
+  }
   return "ODDS_SWING";
 }
 
@@ -45,6 +49,7 @@ export function render(signal: Signal, meta: MatchMeta): NarrationLine {
     delta: signal.delta !== undefined ? Math.abs(signal.delta) : undefined,
     from: signal.detail?.fromOdds,
     to: signal.detail?.toOdds,
+    draw: signal.detail?.drawOdds,
     expected: signal.detail?.expectedOdds,
     confidence: signal.confidence,
     action: signal.suggestedAction,

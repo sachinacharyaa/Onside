@@ -1,5 +1,6 @@
 import type { MatchEvent } from "@onside/ingestion";
 import { createOddsSwingState, evaluateOddsSwing, type OddsSwingState } from "./rules/oddsSwing.js";
+import { observeEvent } from "./rules/observe.js";
 import { evaluateScoreChange } from "./rules/scoreChange.js";
 import { createTimeDecayState, evaluateTimeDecay, type TimeDecayState } from "./rules/timeDecay.js";
 import type { Signal } from "./types.js";
@@ -32,6 +33,12 @@ export function createSignalEngine(): SignalEngine {
 
       const timeDecay = evaluateTimeDecay(event, timeDecayState);
       if (timeDecay) signals.push(timeDecay);
+
+      // Keep Decision Log moving with Market Pulse when no rule crosses threshold.
+      if (signals.length === 0) {
+        const noted = observeEvent(event);
+        if (noted) signals.push(noted);
+      }
 
       return signals;
     },

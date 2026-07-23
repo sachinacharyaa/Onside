@@ -24,5 +24,6 @@ export type Signal = {
     fromOdds?: number;
     toOdds?: number;
     expectedOdds?: number;
+    drawOdds?: number;
   };
 };
