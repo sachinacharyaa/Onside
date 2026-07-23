@@ -19,6 +19,7 @@ function interpolate(template: string, values: Record<string, string | number | 
 
 function pickTemplate(signal: Signal): TemplateKey {
   const event = signal.triggeredBy;
+  if (event.type === "kickoff") return "KICKOFF";
   if (signal.rule === "SCORE_CHANGE") {
     if (event.type === "goal") return "GOAL";
     if (event.type === "card") return "RED_CARD";

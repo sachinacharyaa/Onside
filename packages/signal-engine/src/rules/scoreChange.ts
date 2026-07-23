@@ -10,6 +10,17 @@ import { nextSignalId } from "../util.js";
 export function evaluateScoreChange(event: MatchEvent): Signal | null {
   const cfg = rulesConfig.SCORE_CHANGE;
 
+  if (event.type === "kickoff") {
+    return {
+      id: nextSignalId("SCORE_CHANGE", event.minute),
+      triggeredBy: event,
+      rule: "SCORE_CHANGE",
+      confidence: 0,
+      suggestedAction: "HOLD",
+      detail: { fromOdds: event.odds?.home },
+    };
+  }
+
   if (event.type === "fulltime") {
     const action: SuggestedAction =
       event.scoreHome > event.scoreAway
